@@ -1,0 +1,46 @@
+== About 
+
+ASP stands for `AsciiDoctor Server Protocol`.
+
+It is intented to be something like a "LSP approach for asciidoc" (LSP = language server protocol)
+
+== Why a server?
+
+With https://github.com/de-jcup/eclipse-asciidoctor-editor[AsciiDoctor Editor for eclipse] it was extreme hard to handle
+the OSGI depencencies in conjunction with asciidoctor/asciidoctorj and JRuby
+(see https://github.com/de-jcup/eclipse-asciidoctor-editor/issues/213) 
+
+So instead of handling this always again with new dependencies etc. working with OSGI this project was initiated, to 
+become a standalone solution, which can be used by different editors without spawning always new processes but instead
+reuse an already started server instance which shall be very much faster than doing a new process communciation to an
+installed variant.
+
+The editors shall only delegate their conversion tasks to server side and have a communication layer to the server 
+which will produce information about converted output locations (or errors).
+
+=== Benefits
+- Independent from real installation, can be used ony systems were developers have not possiblity to install 
+  asciidoctor
+- Comes up with standard tool setup (will have HTML, docbook and PDF support)
+- Can be used from multiple IDE integrations (eclipse-asciidoctor, ... more ...)
+- Provides a client library to use the server, so convenient
+
+== Why such an "old school" tcp client/serve approach ?
+It started with a spring boot application, with rest controller etc., but...
+bootJar does not correctly work with asciidoctorj + jruby.
+
+Providing an own fat jar solution did work after time, but I got 59 MB !
+This is too much.
+
+Also spring boot comes with many dependencies - and asciidoctorJ has got itself
+many. To prevent cross site effects the client server protocol should be as 
+simple as possible and has nearly no more dependencies.
+  
+
+== How should editors/tools use this server?
+
+- They should use given asp-client variant.
+- They should start the server as a child process by JVM inside own thread
+  
+== Development phase
+*Early alpha...*

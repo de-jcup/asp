@@ -1,0 +1,24 @@
+ /*============================================================================
+ * Build file for subproject 'asp-server-asciidoctorj'
+ *
+ * Root build file: "${rootProject.projectDir}/build.gradle"
+ * ============================================================================
+ */
+dependencies {
+
+	compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.0.0'
+    compile group: 'org.asciidoctor', name: 'asciidoctorj-pdf', version: '1.5.0-alpha.17'
+   
+    compile project(':asp-server-core')
+
+}
+
+
+task buildDist(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'de.jcup.asp.server.asciidoctorj.AsciidoctorJServerApplication'
+    }
+    baseName = 'asp-server-asciidoctorj'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

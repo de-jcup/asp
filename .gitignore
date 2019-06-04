@@ -1,14 +1,31 @@
-.gradle
-/build/
+# customization file for allprojects - automatically applied
+custom_allprojects.gradle
 
-# Ignore Gradle GUI config
-gradle-app.setting
+# eclipse parts
+bin/
+gen/
+src-gen/
+.metadata
+.lck
+.classpath
+.project
+.settings/
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+# intellij parts
+*.iml
+.idea/
+*.ipr
+*.iws
 
-# Cache of project
-.gradletasknamecache
+# gradle parts
+.gradle/
 
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+# Build artifacts at all
+*.class
+build/
+*.jar
+*.log
+*.bak
+
+# JRebel parts - are generated
+rebel.xml

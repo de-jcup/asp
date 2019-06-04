@@ -1,0 +1,3 @@
+
+include 'asp-api','asp-server-core','asp-server-asciidoctorj','asp-client-java'
+		
