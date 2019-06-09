@@ -48,6 +48,7 @@ public class AspServer {
         
     }
 
+    /* read lines from client, until Request.TERMINATOR is send*/
     private void waitForClient(ServerSocket serverSocket) throws Exception{
         LOG.info("Server starting for client call");
         try(Socket clientSocket = serverSocket.accept();

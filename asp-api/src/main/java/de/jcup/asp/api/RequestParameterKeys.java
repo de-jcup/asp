@@ -7,6 +7,8 @@ public enum RequestParameterKeys implements RequestParameterKey {
      SOURCE_FILEPATH,
      
      BACKEND,
+     
+     BASE_DIR,
 
      ;
     private String id;

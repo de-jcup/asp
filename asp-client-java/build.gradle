@@ -1,3 +1,13 @@
 dependencies {
     compile project(':asp-api')
 }
+
+task buildDist(type: Jar) {
+    manifest {
+        // we use this to identify version inside lib. so lib can be renamed without versioning 
+        attributes 'Client-Version': "${version}"
+    }
+    baseName = 'asp-client'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

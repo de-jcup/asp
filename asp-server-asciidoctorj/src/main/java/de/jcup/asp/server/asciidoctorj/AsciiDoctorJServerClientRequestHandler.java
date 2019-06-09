@@ -8,6 +8,7 @@ import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileService;
+import de.jcup.asp.server.asciidoctorj.service.ResolveAttributesService;
 import de.jcup.asp.server.core.ClientRequestHandler;
 
 public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHandler {
@@ -19,14 +20,16 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
         LOG.debug("Request:\n" + request.convertToString());
         Command command = request.getCommand();
         Response response = new Response();
-        
+
         if (Commands.CONVERT_LOCALFILE.equals(command)) {
             ConvertLocalFileService.INSTANCE.convert(request, response);
+        } else if (Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY.equals(command)) {
+            ResolveAttributesService.INSTANCE.resolveAttributesFromDirectory(request,response);
         } else {
             response.setErrorMessage("Unsupported command:" + command);
         }
         return response;
-       
+
     }
 
 }

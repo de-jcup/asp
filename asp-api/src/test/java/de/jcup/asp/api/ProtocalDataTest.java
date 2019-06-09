@@ -19,37 +19,37 @@ public class ProtocalDataTest {
     @Test
     public void key_value_converttostring_as_expected() {
         /* prepare */
-        responseToTest.data.put("key1", "value1");
+        responseToTest.jsonObject.add("key1", "value1");
         
         /* execute + test */
-        assertEquals("key1=value1",responseToTest.convertToString());
+        assertEquals("{key1=value1}",responseToTest.convertToString());
     }
     
     @Test
     public void two_key_value_converttostring_sorted_and_as_expected() {
         /* prepare */
-        responseToTest.data.put("key2", "value2");
-        responseToTest.data.put("key1", "value1");
+        responseToTest.jsonObject.add("key2", "value2");
+        responseToTest.jsonObject.add("key1", "value1");
         
         /* execute + test */
-        assertEquals("key1=value1\nkey2=value2",responseToTest.convertToString());
+        assertEquals("{key1=value1\nkey2=value2}",responseToTest.convertToString());
     }
     
     @Test
-    public void key_value_converfromstring_as_expected() {
+    public void key_value_converfromstring_as_expected() throws Exception{
         /* execute + test */
         responseToTest = ProtocolData.convertFromString("key1=value1");
         /* test */
-        assertEquals("value1", responseToTest.data.get("key1"));
+        assertEquals("value1", responseToTest.jsonObject.get("key1"));
     }
     
     @Test
-    public void key_value_2_converfromstring_as_expected() {
+    public void key_value_2_converfromstring_as_expected() throws Exception{
         /* execute + test */
         responseToTest = ProtocolData.convertFromString("key1=value1\nkey2=value2");
         /* test */
-        assertEquals("value1", responseToTest.data.get("key1"));
-        assertEquals("value2", responseToTest.data.get("key2"));
+        assertEquals("value1", responseToTest.jsonObject.get("key1"));
+        assertEquals("value2", responseToTest.jsonObject.get("key2"));
     }
     
 

@@ -1,7 +1,8 @@
 package de.jcup.asp.api;
 
 public enum Commands implements Command{
-    CONVERT_LOCALFILE
+    CONVERT_LOCALFILE,
+    RESOLVE_ATTRIBUTES_FROM_DIRECTORY,
     ;
     private String id;
 
