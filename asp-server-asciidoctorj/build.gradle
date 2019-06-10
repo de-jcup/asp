@@ -15,6 +15,10 @@ dependencies {
 
 
 task buildDist(type: Jar) {
+
+    group = 'ASP'
+    description = 'build distribution'
+    
     manifest {
         attributes 'Main-Class': 'de.jcup.asp.server.asciidoctorj.AsciidoctorJServerApplication'
     }

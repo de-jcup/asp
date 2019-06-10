@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 
-public class ProtocolData {
+class ProtocolData {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProtocolData.class);
     

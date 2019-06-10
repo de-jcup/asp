@@ -23,21 +23,29 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.DocumentHeader;
 import org.asciidoctor.jruby.AsciiDocDirectoryWalker;
 import org.asciidoctor.jruby.DirectoryWalker;
 
-public class AsciiDoctorAttributesProvider extends AbstractAsciiDoctorProvider{
+public class AsciiDoctorAttributesProvider{
 	
 	private Map<String, Object> cachedAttributes;
+    private Asciidoctor asciidoctor;
+    private File cachedBaseDir;
 
-	AsciiDoctorAttributesProvider(ProviderContext context){
-		super(context);
+	public AsciiDoctorAttributesProvider(Asciidoctor asciidoctor){
+	    this.asciidoctor=asciidoctor;
 	}
 
-	public Map<String, Object> getCachedAttributes() throws IOException {
-		if (cachedAttributes == null) {
-			cachedAttributes = resolveAttributes(getContext().getBaseDir());
+	public Map<String, Object> getCachedAttributes(File baseDir) throws IOException {
+	    Objects.requireNonNull(baseDir, "Base dir must be set and not null!");
+        if (! baseDir.exists()) {
+            throw new IOException("Base dir does not exist:"+baseDir);
+        }
+		if (cachedAttributes == null || !baseDir.equals(cachedBaseDir)) { // when new base directory we create new cache
+			cachedAttributes = resolveAttributes(baseDir);
+			cachedBaseDir=baseDir;
 		}
 		return cachedAttributes;
 	}
@@ -52,7 +60,7 @@ public class AsciiDoctorAttributesProvider extends AbstractAsciiDoctorProvider{
 		DirectoryWalker directoryWalker = new AsciiDocDirectoryWalker(baseDir.getAbsolutePath());
 
 		for (File file : directoryWalker.scan()) {
-			documentIndex.add(getContext().getAsciiDoctor().readDocumentHeader(file));
+			documentIndex.add(asciidoctor.readDocumentHeader(file));
 		}
 		for (DocumentHeader header : documentIndex) {
 			map.putAll(header.getAttributes());

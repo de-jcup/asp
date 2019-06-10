@@ -3,6 +3,9 @@ dependencies {
 }
 
 task buildDist(type: Jar) {
+    group = 'ASP'
+    description = 'build distribution'
+
     manifest {
         // we use this to identify version inside lib. so lib can be renamed without versioning 
         attributes 'Client-Version': "${version}"

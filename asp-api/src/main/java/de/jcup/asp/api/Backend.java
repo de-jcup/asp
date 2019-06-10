@@ -33,4 +33,12 @@ public enum Backend {
         }
         return DEFAULT;
     }
+
+    public static String getOptionId() {
+        return "backend";
+    }
+
+    public static Backend getDefault() {
+        return DEFAULT;
+    }
 }

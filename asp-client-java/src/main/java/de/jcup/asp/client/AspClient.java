@@ -1,23 +1,27 @@
 package de.jcup.asp.client;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jcup.asp.api.Backend;
+import de.jcup.asp.api.Command;
 import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Constants;
+import de.jcup.asp.api.MapRequestParameterKey;
+import de.jcup.asp.api.MapResponseResultKey;
 import de.jcup.asp.api.Request;
-import de.jcup.asp.api.RequestParameterKeys;
 import de.jcup.asp.api.Response;
-import de.jcup.asp.api.ResponseResultKeys;
+import de.jcup.asp.api.StringRequestParameterKey;
+import de.jcup.asp.api.StringResponseResultKey;
 
 public class AspClient {
 
@@ -28,22 +32,44 @@ public class AspClient {
     public void setPortNumber(int portNumber) {
         this.portNumber = portNumber;
     }
-
-    public Path convertLocal(Path adocfile, Backend backend) throws AspClientException {
+    
+    private Request createRequest() {
         Request request = new Request();
-        request.set(RequestParameterKeys.COMMAND, Commands.CONVERT_LOCALFILE);
-        request.set(RequestParameterKeys.BACKEND, backend.convertToString());
-        request.set(RequestParameterKeys.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
+        request.set(StringRequestParameterKey.VERSION, "1.0"); 
+        return request;
+    }
+
+    public Path convertFile(Path adocfile, Map<String,Object> options) throws AspClientException {
+        Request request = createRequest();
+        
+        request.set(StringRequestParameterKey.COMMAND, Commands.CONVERT_FILE);
+        
+        request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
+        request.set(MapRequestParameterKey.OPTIONS, options);
+        
+        Response response = callServer(request);
+       
+        Path path = Paths.get(response.getString(StringResponseResultKey.RESULT_FILEPATH));
+        return path;
+    }
+    
+    public Map<String, Object> resolveAttributes(File baseDir) throws AspClientException{
+        Request request = createRequest();
+        
+        request.set(StringRequestParameterKey.COMMAND, Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY);
+        request.set(StringRequestParameterKey.BASE_DIR, baseDir.getAbsolutePath());
 
         Response response = callServer(request);
-        if (response.failed()) {
-            throw new AspClientException("Failed:"+response.getErrorMessage());
-        }
-        Path path = Paths.get(response.get(ResponseResultKeys.RESULT_FILEPATH));
-        return path;
+        return response.getMap(MapResponseResultKey.RESULT_ATTRIBUTES);
+        
     }
 
     private Response callServer(Request r) throws AspClientException {
+        Command command = r.getCommand();
+        if (command==null) {
+            throw new AspClientException("No command set");
+        }
+        
         try (Socket aspSocket = new Socket(InetAddress.getLoopbackAddress(), portNumber);
                 PrintWriter out = new PrintWriter(aspSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(aspSocket.getInputStream()));) {
@@ -64,7 +90,11 @@ public class AspClient {
                 result.append('\n');
             }
             
-            return Response.convertFromString(result.toString());
+            Response response = Response.convertFromString(result.toString());
+            if (response.failed()) {
+                throw new AspClientException("Failed:"+response.getErrorMessage());
+            }
+            return response;
             
         } catch (Exception e) {
             throw new AspClientException("Was not able to convert local file", e);

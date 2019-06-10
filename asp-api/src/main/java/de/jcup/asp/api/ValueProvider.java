@@ -1,6 +1,6 @@
 package de.jcup.asp.api;
 
-public interface ValueProvider {
+public interface ValueProvider<T> {
 
-    public String getValue();
+    public T getValue();
 }

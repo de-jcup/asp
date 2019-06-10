@@ -1,13 +1,25 @@
 package de.jcup.asp.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Commands implements Command{
-    CONVERT_LOCALFILE,
-    RESOLVE_ATTRIBUTES_FROM_DIRECTORY,
+    
+    CONVERT_FILE(StringRequestParameterKey.SOURCE_FILEPATH,MapRequestParameterKey.OPTIONS),
+    
+    RESOLVE_ATTRIBUTES_FROM_DIRECTORY(),
+    
     ;
     private String id;
-
-    private Commands() {
+    private List<RequestParameterKey<?>> requiredParamters = new ArrayList<>();
+    
+    private Commands(RequestParameterKey<?>... requiredParameters) {
         this.id=name().toLowerCase();
+        for (RequestParameterKey<?> requird: requiredParameters) {
+            if (requird!=null) {
+                this.requiredParamters.add(requird);
+            }
+        }
     }
     
     @Override
@@ -25,5 +37,10 @@ public enum Commands implements Command{
             }
         }
         return null;
+    }
+    
+    @Override
+    public List<RequestParameterKey<?>> getRequiredParameters() {
+        return requiredParamters;
     }
 }

@@ -7,6 +7,7 @@ import de.jcup.asp.api.Command;
 import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
+import de.jcup.asp.api.StringResponseResultKey;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileService;
 import de.jcup.asp.server.asciidoctorj.service.ResolveAttributesService;
 import de.jcup.asp.server.core.ClientRequestHandler;
@@ -20,9 +21,10 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
         LOG.debug("Request:\n" + request.convertToString());
         Command command = request.getCommand();
         Response response = new Response();
+        response.set(StringResponseResultKey.VERSION, "1.0"); // even marked with 1.0 this is curerntly a changing protocol, unless asp client version 1.0 has been released
 
-        if (Commands.CONVERT_LOCALFILE.equals(command)) {
-            ConvertLocalFileService.INSTANCE.convert(request, response);
+        if (Commands.CONVERT_FILE.equals(command)) {
+            ConvertLocalFileService.INSTANCE.convertFile(request, response);
         } else if (Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY.equals(command)) {
             ResolveAttributesService.INSTANCE.resolveAttributesFromDirectory(request,response);
         } else {
