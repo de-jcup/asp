@@ -1,9 +1,0 @@
-{
-    "child1": {
-        "childChild1": {
-            "childChildKey1": "childChildValue1"
-        },
-        "childKey1": "childValue1"
-    },
-    "key1": "value1"
-}
