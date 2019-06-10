@@ -31,6 +31,7 @@ private static final Logger LOG = LoggerFactory.getLogger(AsciidoctorService.cla
     
     public void warmUp() {
         LOG.info("Starting warmup phase for asciidoctor");
+        asciidoctor.requireLibrary("asciidoctor-diagram"); 
         asciidoctor.convert("== Just a warmup\nThis ensures asciidoctor is running and next call is faster and has now waits", options().attributes(
                 AttributesBuilder.attributes()        
                 .get()).backend(Backend.HTML.convertToString()).safe(SafeMode.UNSAFE).get());
