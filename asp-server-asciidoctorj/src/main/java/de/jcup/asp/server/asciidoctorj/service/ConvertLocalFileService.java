@@ -6,9 +6,11 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 
+import org.asciidoctor.Asciidoctor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.core.pattern.util.AsIsEscapeUtil;
 import de.jcup.asp.api.Backend;
 import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
@@ -57,9 +59,11 @@ public class ConvertLocalFileService {
         
         Path adocfile = Paths.get(filePath);
         // see https://github.com/asciidoctor/asciidoctorj/blob/master/docs/integrator-guide.adoc
-        service.getAsciidoctor().convertFile(adocfile.toFile(), options);
+        Asciidoctor asciidoctor = service.getAsciidoctor();
+        asciidoctor.convertFile(adocfile.toFile(), options);
         
         File targetFile = provider.resolveTargetFileFor(adocfile.toFile(),backend);
         response.set(StringResponseResultKey.RESULT_FILEPATH,targetFile.getAbsolutePath());
+        response.setServerLog(service.getLogDataProvider().getLogData());
     }
 }

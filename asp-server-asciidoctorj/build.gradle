@@ -10,6 +10,9 @@ dependencies {
     compile group: 'org.asciidoctor', name: 'asciidoctorj-pdf', version: '1.5.0-alpha.17'
     compile group: 'org.asciidoctor', name: 'asciidoctorj-diagram', version: '1.5.18'
     compile project(':asp-server-core')
+    
+    // https://mvnrepository.com/artifact/org.mockito/mockito-all
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
 
 }
 

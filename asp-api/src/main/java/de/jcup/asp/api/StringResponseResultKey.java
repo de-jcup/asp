@@ -7,6 +7,8 @@ public enum StringResponseResultKey implements ResponseResultKey<String>{
 
     RESULT_FILEPATH, 
     
+    SERVER_LOGS,
+    
     ;
 
     private String id;

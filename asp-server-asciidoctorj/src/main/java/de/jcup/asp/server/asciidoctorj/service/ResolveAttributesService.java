@@ -49,6 +49,7 @@ public class ResolveAttributesService {
         Map<String, Object> map = provider.getCachedAttributes(baseDir);
         
         response.set(MapResponseResultKey.RESULT_ATTRIBUTES,map);
+        response.setServerLog(service.getLogDataProvider().getLogData());
     }
 
 }

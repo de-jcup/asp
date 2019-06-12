@@ -37,7 +37,9 @@ public class AbstractProtocolObject {
     }
 
     Map<String, Object> internalGetMap(APIKey<Map<String, Object>> key) {
-
+        if (key==null) {
+            return null;
+        }
         return jsonToMap.toMap(data.jsonObject.get(key.getId()));
 
     }

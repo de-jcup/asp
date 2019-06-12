@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jcup.asp.api.Backend;
+import de.jcup.asp.server.asciidoctorj.provider.LogDataProvider;
 
 public class AsciidoctorService {
 
@@ -17,16 +18,25 @@ private static final Logger LOG = LoggerFactory.getLogger(AsciidoctorService.cla
 
     private Asciidoctor asciidoctor;
 
+    private LogDataProvider logDataProvider;
+
     public static final AsciidoctorService INSTANCE = new AsciidoctorService();
     
     private AsciidoctorService() {
+        logDataProvider = new LogDataProvider();
+        
         LOG.info("Starting, will create asciidoctorj instance");
         asciidoctor = create();
+        asciidoctor.registerLogHandler(logDataProvider);
         LOG.info("Created instance");
     }
     
     public Asciidoctor getAsciidoctor() {
         return asciidoctor;
+    }
+    
+    public LogDataProvider getLogDataProvider() {
+        return logDataProvider;
     }
     
     public void warmUp() {

@@ -1,5 +1,7 @@
 package de.jcup.asp.api;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class Response extends AbstractProtocolObject {
@@ -12,6 +14,28 @@ public class Response extends AbstractProtocolObject {
 
     public void set(ResponseResultKey<String> key, String value) {
         internalSet(key, value);
+    }
+
+    public void setServerLog(ServerLog log) {
+        internalSet(StringResponseResultKey.SERVER_LOGS, log.convertToString());
+    }
+    
+    public ServerLog getServerLog() {
+        String json = internalGetString(StringResponseResultKey.SERVER_LOGS);
+        return ServerLog.convertFromString(json);
+    }
+    
+    public Path getResultFilePath() {
+        String filePath = getString(StringResponseResultKey.RESULT_FILEPATH);
+        if (filePath==null) {
+            return null;
+        }
+        Path path = Paths.get(filePath);
+        return path;
+    }
+    
+    public Map<String,Object> getAttributes(){
+        return getMap(MapResponseResultKey.RESULT_ATTRIBUTES);
     }
     
     /**

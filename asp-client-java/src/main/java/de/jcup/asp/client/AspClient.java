@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,11 +16,9 @@ import de.jcup.asp.api.Command;
 import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Constants;
 import de.jcup.asp.api.MapRequestParameterKey;
-import de.jcup.asp.api.MapResponseResultKey;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
-import de.jcup.asp.api.StringResponseResultKey;
 
 public class AspClient {
 
@@ -39,7 +36,7 @@ public class AspClient {
         return request;
     }
 
-    public Path convertFile(Path adocfile, Map<String,Object> options) throws AspClientException {
+    public Response convertFile(Path adocfile, Map<String,Object> options) throws AspClientException {
         Request request = createRequest();
         
         request.set(StringRequestParameterKey.COMMAND, Commands.CONVERT_FILE);
@@ -47,20 +44,17 @@ public class AspClient {
         request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
         request.set(MapRequestParameterKey.OPTIONS, options);
         
-        Response response = callServer(request);
+        return callServer(request);
        
-        Path path = Paths.get(response.getString(StringResponseResultKey.RESULT_FILEPATH));
-        return path;
     }
     
-    public Map<String, Object> resolveAttributes(File baseDir) throws AspClientException{
+    public Response resolveAttributes(File baseDir) throws AspClientException{
         Request request = createRequest();
         
         request.set(StringRequestParameterKey.COMMAND, Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY);
         request.set(StringRequestParameterKey.BASE_DIR, baseDir.getAbsolutePath());
 
-        Response response = callServer(request);
-        return response.getMap(MapResponseResultKey.RESULT_ATTRIBUTES);
+        return callServer(request);
         
     }
 
