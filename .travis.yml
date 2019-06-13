@@ -1,0 +1,11 @@
+#
+# Simply build and test by https://travis-ci.org
+#
+language: java
+
+jdk:
+- oraclejdk8
+
+before_install:
+- chmod +x gradlew
+
