@@ -10,7 +10,6 @@ import org.asciidoctor.Asciidoctor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.core.pattern.util.AsIsEscapeUtil;
 import de.jcup.asp.api.Backend;
 import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;

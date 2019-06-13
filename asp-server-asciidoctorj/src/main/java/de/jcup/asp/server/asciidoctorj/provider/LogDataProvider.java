@@ -22,6 +22,10 @@ public class LogDataProvider implements LogHandler {
 
     @Override
     public void log(LogRecord logRecord) {
+        if (Severity.DEBUG.equals(logRecord.getSeverity())){
+            /* we ignore debug statements */
+            return;
+        }
         ServerLogEntry logEntry = convert(logRecord);
         
         synchronized (monitor) {

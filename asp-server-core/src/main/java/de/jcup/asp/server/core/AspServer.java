@@ -1,8 +1,11 @@
 package de.jcup.asp.server.core;
 
+import static de.jcup.asp.server.core.ExitCodes.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,6 +14,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Constants;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
@@ -42,8 +46,12 @@ public class AspServer {
                     LOG.error("Client communication failed", e);
                 }
             }
+        }catch(BindException be) {
+            LOG.error("Already bind port:{}",portNumber,be);
+            System.exit(ERROR_PORT_ALREADY_USED);
         } catch (Exception e) {
             LOG.error("Server cannot be started", e);
+            System.exit(ERROR);
         }
         
     }
@@ -67,7 +75,13 @@ public class AspServer {
             Response response =null;
             try {
                 Request request = Request.convertFromString(sb.toString());
-                response = requestHandler.handleRequest(request);
+                if (Commands.IS_ALIVE.equals(request.getCommand())) {
+                    /* we send back just an empty response*/
+                    response=new Response();
+                }else {
+                    /* all other commands are handled by request handler*/
+                    response = requestHandler.handleRequest(request);
+                }
                 
             }catch(Exception e) {
                 LOG.error("Request handling failed", e);

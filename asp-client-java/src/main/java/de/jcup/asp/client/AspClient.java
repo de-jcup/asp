@@ -57,6 +57,18 @@ public class AspClient {
         return callServer(request);
         
     }
+    
+    public boolean isServerAlive() {
+        Request request = createRequest();
+        request.set(StringRequestParameterKey.COMMAND, Commands.IS_ALIVE);
+        try {
+            callServer(request);
+        } catch (AspClientException e) {
+            /* ignore - exception just means it does not run */
+            return false;
+        }
+        return true;
+    }
 
     private Response callServer(Request r) throws AspClientException {
         Command command = r.getCommand();
@@ -91,7 +103,7 @@ public class AspClient {
             return response;
             
         } catch (Exception e) {
-            throw new AspClientException("Was not able to convert local file", e);
+            throw new AspClientException("Command "+command.getId()+" failed.", e);
         }
     }
 

@@ -9,6 +9,8 @@ public enum Commands implements Command{
     
     RESOLVE_ATTRIBUTES_FROM_DIRECTORY(),
     
+    IS_ALIVE,
+    
     ;
     private String id;
     private List<RequestParameterKey<?>> requiredParamters = new ArrayList<>();

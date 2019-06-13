@@ -21,7 +21,7 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
         LOG.debug("Request:\n" + request.convertToString());
         Command command = request.getCommand();
         Response response = new Response();
-        response.set(StringResponseResultKey.VERSION, "1.0"); // even marked with 1.0 this is curerntly a changing protocol, unless asp client version 1.0 has been released
+        response.set(StringResponseResultKey.VERSION, "1.0"); 
 
         if (Commands.CONVERT_FILE.equals(command)) {
             ConvertLocalFileService.INSTANCE.convertFile(request, response);

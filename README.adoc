@@ -31,10 +31,10 @@ which will produce information about converted output locations (or errors).
 
 == Why such an "old school" tcp client/serve approach ?
 It started with a spring boot application, with rest controller etc., but...
-bootJar does not correctly work with asciidoctorj + jruby.
+spring bootJar did not correctly work with asciidoctorj + jruby.
 
 Providing an own fat jar solution did work after time, but I got 59 MB !
-This is too much.
+This was too much.
 
 Also spring boot comes with many dependencies - and asciidoctorJ has got itself
 many. To prevent cross site effects the client server protocol should be as 
@@ -44,7 +44,8 @@ simple as possible and has nearly no more dependencies.
 == How should editors/tools use this server?
 
 - They should use given asp-client variant.
-- They should start the server as a child process by JVM inside own thread
+- They should start the server as a child process by calling server inside 
+  another JVM - best inside own thread
   
 == Development phase
-*Early alpha...*
+*BETA*
