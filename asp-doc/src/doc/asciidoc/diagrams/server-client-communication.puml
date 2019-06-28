@@ -1,0 +1,11 @@
+@startuml
+== Initialization ==
+Launcher -> Server: start server and get secret key
+Launcher -> Client: inject secret key
+== Command repetition ==
+    Client -> Server: Request-JSON (encrypted)
+    Client --> Server: Request-Terminator
+    Server -> Client: Response-JSON (encrypted)
+    Server --> Client: Response-Terminator
+
+@enduml

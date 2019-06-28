@@ -2,15 +2,22 @@ package de.jcup.asp.server.asciidoctorj.launcher;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import de.jcup.asp.core.ASPLauncher;
 import de.jcup.asp.core.CoreConstants;
+import de.jcup.asp.core.ExitCode;
+import de.jcup.asp.core.LaunchException;
 import de.jcup.asp.core.LogHandler;
 import de.jcup.asp.core.OutputHandler;
+import de.jcup.asp.core.ServerExitCodes;
 
-public class ServerLauncher {
+public class AsciidoctorJServerLauncher implements ASPLauncher {
+    
     private int port;
     private String pathToJava;
     private String pathToServerJar;
@@ -19,11 +26,11 @@ public class ServerLauncher {
     private OutputHandler outputHandler;
     private LogHandler logHandler;
 
-    public ServerLauncher(String pathToServerJar, int port) {
+    public AsciidoctorJServerLauncher(String pathToServerJar, int port) {
         this(null, pathToServerJar,port);
     }
 
-    public ServerLauncher(String pathTojava, String pathToServerJar,int port) {
+    public AsciidoctorJServerLauncher(String pathTojava, String pathToServerJar,int port) {
         this.pathToJava = pathTojava;
         this.pathToServerJar = pathToServerJar;
         this.port=port;
@@ -34,18 +41,34 @@ public class ServerLauncher {
      * 
      * @return secret server key
      */
-    public String launch() throws LaunchException{
+    public String launch(int timeOutInSeconds) throws LaunchException{
         ServerStartRunnable runnable = new ServerStartRunnable(port);
         Thread thread = new Thread(runnable, "ASP Launcher, port:" + port);
         thread.setDaemon(true);
         thread.start();
-        while (runnable.failed==null && runnable.secretKey == null) {
+     
+        waitForSecretKey(timeOutInSeconds, runnable);
+        return runnable.secretKey;
+    }
+
+    private void waitForSecretKey(int timeOutInSeconds, ServerStartRunnable runnable) throws LaunchException {
+        Duration acceptedmax = Duration.ofSeconds(timeOutInSeconds);
+        Instant start = Instant.now();
+        
+        
+        while ( hasNotEnded() && runnable.failed==null && runnable.secretKey == null) {
             try {
-                Thread.sleep(500);
+               Thread.sleep(500);
             } catch (InterruptedException e) {
                Thread.currentThread().interrupt();
                break;
             }
+            Instant finish = Instant.now();
+            Duration duration = Duration.between(start, finish);
+            if (duration.compareTo(acceptedmax)>0) {
+                throw new LaunchException("Timed out after "+duration.getSeconds()+" seconds");
+            }
+            
         }
         if (runnable.failed!=null) {
             throw new LaunchException("Was not able to launch server on port:"+port, runnable.failed);
@@ -53,7 +76,16 @@ public class ServerLauncher {
         if (runnable.secretKey==null) {
             throw new LaunchException("Server did not return secret!",null);
         }
-        return runnable.secretKey;
+    }
+
+    private boolean hasNotEnded() {
+        if (process==null) {
+            return true;// process has not been started
+        }
+        if (process.isAlive()) {
+            return true;
+        }
+        return false;
     }
 
     public int getPort() {
@@ -88,7 +120,6 @@ public class ServerLauncher {
     public boolean stopServer() {
         if (process == null) {
             return false;
-
         }
         if (!process.isAlive()) {
             return false;
@@ -134,6 +165,7 @@ public class ServerLauncher {
             commands.add(pathToServerJar);
 
             ProcessBuilder pb = new ProcessBuilder(commands);
+            pb.redirectErrorStream(true); // we want output and error stream handled same time
             StringBuffer lineStringBuffer = new StringBuffer();
             try {
                 process = pb.start();
@@ -163,7 +195,9 @@ public class ServerLauncher {
                 }
                 int exitCode = process.waitFor();
                 if (outputHandler != null) {
-                    outputHandler.output(">> Former running ASP Server at port " + port + " stopped, exit code was:" + exitCode);
+                    ExitCode exitCodeObject = ServerExitCodes.from(exitCode);
+                    
+                    outputHandler.output(">> ASP Server at port " + port + " exited with code:" + exitCodeObject.toMessage());
                 }
             } catch (Exception e) {
                 String message = ">> FATAL ASP server connection failure :" + e.getMessage();

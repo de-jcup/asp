@@ -1,7 +1,5 @@
 package de.jcup.asp.server.core;
 
-import static de.jcup.asp.server.core.ExitCodes.*;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -19,19 +17,32 @@ import de.jcup.asp.api.Constants;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.core.CryptoAccess;
+import de.jcup.asp.core.ExitCode;
 
 import static de.jcup.asp.core.CoreConstants.SERVER_SECRET_OUTPUT_PREFIX;
+import static de.jcup.asp.core.ServerExitCodes.*;
 
-public class AspServer {
+public class CoreAspServer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AspServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CoreAspServer.class);
 
     private int portNumber = Constants.DEFAULT_SERVER_PORT;
     private ClientRequestHandler requestHandler;
 
     private CryptoAccess cryptoAccess;
+    private ServerSocket serverSocket;
+    private boolean onExitKeepAlive;
+    private ExitCode exitCode;
     
-    public AspServer() {
+    public void setOnExitKeepAlive(boolean onExitKeepAlive) {
+        this.onExitKeepAlive = onExitKeepAlive;
+    }
+
+    public boolean isReady() {
+        return serverSocket!=null && serverSocket.isBound();
+    }
+    
+    public CoreAspServer() {
         this.cryptoAccess=new CryptoAccess();
     }
 
@@ -42,6 +53,10 @@ public class AspServer {
     public void setRequestHandler(ClientRequestHandler requestHandler) {
         this.requestHandler = requestHandler;
     }
+    
+    public CryptoAccess getCryptoAccess() {
+        return cryptoAccess;
+    }
 
     public void start() {
         Objects.requireNonNull(requestHandler,"Request handler not set!");
@@ -49,25 +64,35 @@ public class AspServer {
         LOG.info(SERVER_SECRET_OUTPUT_PREFIX+"{}",cryptoAccess.getSecretKey());
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber,0,InetAddress.getLoopbackAddress())) {
+            this.serverSocket=serverSocket;
             while (true) {
                 try {
-                    waitForClient(serverSocket);
+                    waitForClient();
                 } catch (Exception e) {
                     LOG.error("Client communication failed", e);
                 }
             }
         }catch(BindException be) {
             LOG.error("Already bind port:{}",portNumber,be);
-            System.exit(ERROR_PORT_ALREADY_USED);
+            exit(ERROR_PORT_ALREADY_USED);
         } catch (Exception e) {
             LOG.error("Server cannot be started", e);
-            System.exit(ERROR);
+            exit(ERROR);
         }
         
     }
-
+    
+    protected void exit(ExitCode exitCode) {
+        this.exitCode=exitCode;
+        if (onExitKeepAlive) {
+            LOG.info("Keep alive, exit:"+exitCode.toMessage());
+        }else {
+            System.exit(exitCode.getExitCode());
+        }
+    }
+    
     /* read lines from client, until Request.TERMINATOR is send*/
-    private void waitForClient(ServerSocket serverSocket) throws Exception{
+    private void waitForClient() throws Exception{
         LOG.info("Server waiting for client call");
         try(Socket clientSocket = serverSocket.accept();
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -76,10 +101,10 @@ public class AspServer {
             StringBuilder sb = new StringBuilder();
             String encryptedFromClient = null;
             while ( (encryptedFromClient=in.readLine())!=null){
-                String decryptedFromClient = cryptoAccess.decrypt(encryptedFromClient);
-                if (Request.TERMINATOR.equals(decryptedFromClient)) {
+                if (Request.TERMINATOR.equals(encryptedFromClient)) {
                     break;
                 }
+                String decryptedFromClient = cryptoAccess.decrypt(encryptedFromClient);
                 sb.append(decryptedFromClient);
                 sb.append('\n');
             }
@@ -99,9 +124,13 @@ public class AspServer {
                 response=new Response();
                 response.setErrorMessage(e.getMessage());
             }
-            String unencrypted = response.convertToString()+"\n"+Response.TERMINATOR;
-            out.println(cryptoAccess.encrypt(unencrypted));
+            out.println(cryptoAccess.encrypt(response.convertToString()));
+            out.println(Response.TERMINATOR);
             
         }
+    }
+
+    public boolean hasFailed() {
+        return exitCode!= null && exitCode.getExitCode()!=0;
     }        
 }

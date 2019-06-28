@@ -76,11 +76,12 @@ public class AspClient {
         request.set(StringRequestParameterKey.COMMAND, Commands.IS_ALIVE);
         try {
             callServer(request);
+            return true;
         } catch (AspClientException e) {
             /* ignore - exception just means it does not run */
+            e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     private Response callServer(Request r) throws AspClientException {
@@ -103,11 +104,11 @@ public class AspClient {
             String encryptedfromServer = null;
             StringBuilder result = new StringBuilder();
             while ((encryptedfromServer = in.readLine()) != null) {
-                String fromServer = cryptoAccess.decrypt(encryptedfromServer);
-                LOG.debug("receiving-unencrypted:{}",fromServer);
-                if (fromServer.equals(Response.TERMINATOR)) {
+                if (encryptedfromServer.equals(Response.TERMINATOR)) {
                     break;
                 }
+                String fromServer = cryptoAccess.decrypt(encryptedfromServer);
+                LOG.debug("receiving-unencrypted:{}",fromServer);
                 result.append(fromServer);
                 result.append('\n');
             }
@@ -120,7 +121,7 @@ public class AspClient {
             
         } catch (Exception e) {
             if (e instanceof DecryptionException) {
-                throw new AspClientException("Crypto failure, normally untrusted ASP server", e);
+                throw new FatalAspClientException("Crypto failure, normally untrusted ASP server", e);
             }
             throw new AspClientException("Command "+command.getId()+" failed.", e);
         }

@@ -1,6 +1,7 @@
 
 include 'asp-api',
 'asp-core', 
+'asp-doc', 
 'asp-server-core',
 'asp-server-asciidoctorj',
 'asp-server-asciidoctorj-launcher',
