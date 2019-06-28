@@ -18,6 +18,9 @@ import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Constants;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
+import de.jcup.asp.core.CryptoAccess;
+
+import static de.jcup.asp.core.CoreConstants.SERVER_SECRET_OUTPUT_PREFIX;
 
 public class AspServer {
 
@@ -25,6 +28,12 @@ public class AspServer {
 
     private int portNumber = Constants.DEFAULT_SERVER_PORT;
     private ClientRequestHandler requestHandler;
+
+    private CryptoAccess cryptoAccess;
+    
+    public AspServer() {
+        this.cryptoAccess=new CryptoAccess();
+    }
 
     public void setPortNumber(int portNumber) {
         this.portNumber = portNumber;
@@ -37,6 +46,7 @@ public class AspServer {
     public void start() {
         Objects.requireNonNull(requestHandler,"Request handler not set!");
         LOG.info("Server starting at port:{}", portNumber);
+        LOG.info(SERVER_SECRET_OUTPUT_PREFIX+"{}",cryptoAccess.getSecretKey());
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber,0,InetAddress.getLoopbackAddress())) {
             while (true) {
@@ -64,12 +74,13 @@ public class AspServer {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
             
             StringBuilder sb = new StringBuilder();
-            String fromClient = null;
-            while ( (fromClient=in.readLine())!=null){
-                if (Request.TERMINATOR.equals(fromClient)) {
+            String encryptedFromClient = null;
+            while ( (encryptedFromClient=in.readLine())!=null){
+                String decryptedFromClient = cryptoAccess.decrypt(encryptedFromClient);
+                if (Request.TERMINATOR.equals(decryptedFromClient)) {
                     break;
                 }
-                sb.append(fromClient);
+                sb.append(decryptedFromClient);
                 sb.append('\n');
             }
             Response response =null;
@@ -88,8 +99,8 @@ public class AspServer {
                 response=new Response();
                 response.setErrorMessage(e.getMessage());
             }
-            out.println(response.convertToString());
-            out.println(Response.TERMINATOR);
+            String unencrypted = response.convertToString()+"\n"+Response.TERMINATOR;
+            out.println(cryptoAccess.encrypt(unencrypted));
             
         }
     }        

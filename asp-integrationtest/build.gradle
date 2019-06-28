@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':asp-client-java')
+    compile project(':asp-server-asciidoctorj')
+    compile project(':asp-server-asciidoctorj-launcher')
+}

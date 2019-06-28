@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,24 @@ import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
+import de.jcup.asp.core.CryptoAccess;
+import de.jcup.asp.core.CryptoAccess.DecryptionException;
 
 public class AspClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(AspClient.class);
 
     private int portNumber = Constants.DEFAULT_SERVER_PORT;
+
+    private CryptoAccess cryptoAccess;
+
+    public AspClient(String base64EncodedKey) {
+        Objects.requireNonNull(base64EncodedKey, "key may not be null");
+        if (base64EncodedKey.trim().isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        this.cryptoAccess = new CryptoAccess(base64EncodedKey);
+    }
 
     public void setPortNumber(int portNumber) {
         this.portNumber = portNumber;
@@ -80,15 +93,18 @@ public class AspClient {
                 PrintWriter out = new PrintWriter(aspSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(aspSocket.getInputStream()));) {
             
-            String requestString = r.convertToString();
-            LOG.debug("sending:\n{}",requestString);
-            out.println(requestString);
+            String unencryptedRequestString = r.convertToString();
+            LOG.debug("sending-unencrypted:\n{}",unencryptedRequestString);
+            String encryptedRequestString = cryptoAccess.encrypt(unencryptedRequestString);
+            
+            out.println(encryptedRequestString);
             out.println(Request.TERMINATOR);
             
-            String fromServer = null;
+            String encryptedfromServer = null;
             StringBuilder result = new StringBuilder();
-            while ((fromServer = in.readLine()) != null) {
-                LOG.debug("receiving:{}",fromServer);
+            while ((encryptedfromServer = in.readLine()) != null) {
+                String fromServer = cryptoAccess.decrypt(encryptedfromServer);
+                LOG.debug("receiving-unencrypted:{}",fromServer);
                 if (fromServer.equals(Response.TERMINATOR)) {
                     break;
                 }
@@ -103,6 +119,9 @@ public class AspClient {
             return response;
             
         } catch (Exception e) {
+            if (e instanceof DecryptionException) {
+                throw new AspClientException("Crypto failure, normally untrusted ASP server", e);
+            }
             throw new AspClientException("Command "+command.getId()+" failed.", e);
         }
     }

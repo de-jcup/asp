@@ -1,3 +1,9 @@
 
-include 'asp-api','asp-server-core','asp-server-asciidoctorj','asp-client-java'
+include 'asp-api',
+'asp-core', 
+'asp-server-core',
+'asp-server-asciidoctorj',
+'asp-server-asciidoctorj-launcher',
+'asp-client-java',
+'asp-integrationtest'
 		
