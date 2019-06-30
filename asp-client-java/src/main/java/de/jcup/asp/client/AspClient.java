@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.file.Path;
@@ -15,11 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import de.jcup.asp.api.Command;
 import de.jcup.asp.api.Commands;
-import de.jcup.asp.api.Constants;
 import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
+import de.jcup.asp.core.Constants;
 import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.CryptoAccess.DecryptionException;
 
@@ -31,6 +32,10 @@ public class AspClient {
 
     private CryptoAccess cryptoAccess;
 
+    /**
+     * Creates new ASP client.
+     * @param base64EncodedKey key used to communicate encrypted with server. Must be same as from trusted server, otherwise no communication will be possible
+     */
     public AspClient(String base64EncodedKey) {
         Objects.requireNonNull(base64EncodedKey, "key may not be null");
         if (base64EncodedKey.trim().isEmpty()) {
@@ -43,12 +48,6 @@ public class AspClient {
         this.portNumber = portNumber;
     }
     
-    private Request createRequest() {
-        Request request = new Request();
-        request.set(StringRequestParameterKey.VERSION, "1.0"); 
-        return request;
-    }
-
     public Response convertFile(Path adocfile, Map<String,Object> options) throws AspClientException {
         Request request = createRequest();
         
@@ -61,6 +60,7 @@ public class AspClient {
        
     }
     
+    @Deprecated // will be removed in future
     public Response resolveAttributes(File baseDir) throws AspClientException{
         Request request = createRequest();
         
@@ -77,11 +77,17 @@ public class AspClient {
         try {
             callServer(request);
             return true;
-        } catch (AspClientException e) {
-            /* ignore - exception just means it does not run */
-            e.printStackTrace();
+        } catch (NoConnectionAspClientException e) {
             return false;
+        } catch (AspClientException e) {
+            throw new IllegalStateException("Connection available but other error occurred:"+e.getMessage(),e);
         }
+    }
+
+    private Request createRequest() {
+        Request request = new Request();
+        request.set(StringRequestParameterKey.VERSION, "1.0"); 
+        return request;
     }
 
     private Response callServer(Request r) throws AspClientException {
@@ -107,6 +113,7 @@ public class AspClient {
                 if (encryptedfromServer.equals(Response.TERMINATOR)) {
                     break;
                 }
+                LOG.debug("receiving-encrypted:{}",encryptedfromServer);
                 String fromServer = cryptoAccess.decrypt(encryptedfromServer);
                 LOG.debug("receiving-unencrypted:{}",fromServer);
                 result.append(fromServer);
@@ -122,6 +129,9 @@ public class AspClient {
         } catch (Exception e) {
             if (e instanceof DecryptionException) {
                 throw new FatalAspClientException("Crypto failure, normally untrusted ASP server", e);
+            }
+            if (e instanceof ConnectException) {
+                throw new NoConnectionAspClientException("Connection to port "+portNumber+" refused", e);
             }
             throw new AspClientException("Command "+command.getId()+" failed.", e);
         }

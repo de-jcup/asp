@@ -1,4 +1,4 @@
-package de.jcup.asp.api;
+package de.jcup.asp.core;
 
 public class Constants {
 

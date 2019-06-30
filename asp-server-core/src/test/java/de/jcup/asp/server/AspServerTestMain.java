@@ -9,7 +9,7 @@ public class AspServerTestMain {
 
     private static final Logger LOG = LoggerFactory.getLogger(AspServerTestMain.class);
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         CoreAspServer server = new CoreAspServer();
         server.setRequestHandler(new DummyOutputClientRequestHandler());
         String portProperty = System.getProperty("asp.server.port");

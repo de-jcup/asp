@@ -16,7 +16,12 @@ import de.jcup.asp.core.LogHandler;
 import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.core.ServerExitCodes;
 
-public class AsciidoctorJServerLauncher implements ASPLauncher {
+/**
+ * This ASP launcher will create a new java process and start ASP server from given path to jar.
+ * A {@link OutputHandler} can be set to obtain error and normal output from processs.
+ *
+ */
+public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
     
     private int port;
     private String pathToJava;
@@ -26,11 +31,11 @@ public class AsciidoctorJServerLauncher implements ASPLauncher {
     private OutputHandler outputHandler;
     private LogHandler logHandler;
 
-    public AsciidoctorJServerLauncher(String pathToServerJar, int port) {
+    public ExternalProcessAsciidoctorJServerLauncher(String pathToServerJar, int port) {
         this(null, pathToServerJar,port);
     }
 
-    public AsciidoctorJServerLauncher(String pathTojava, String pathToServerJar,int port) {
+    public ExternalProcessAsciidoctorJServerLauncher(String pathTojava, String pathToServerJar,int port) {
         this.pathToJava = pathTojava;
         this.pathToServerJar = pathToServerJar;
         this.port=port;

@@ -1,10 +1,14 @@
 package de.jcup.asp.server.asciidoctorj;
 
+import static de.jcup.asp.core.ServerExitCodes.*;
+
+import java.net.BindException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jcup.asp.server.asciidoctorj.service.AsciidoctorService;
-import de.jcup.asp.server.core.CoreAspServer;
+import de.jcup.asp.core.Constants;
+import de.jcup.asp.core.ServerExitCodes;
 
 public class AsciidoctorJServerApplication {
 
@@ -19,9 +23,25 @@ public class AsciidoctorJServerApplication {
                 port=Integer.parseInt(portProperty);
             }
         } catch (NumberFormatException e) {
-            LOG.error("worng port definition:{} using default", portProperty);
+            port = Constants.DEFAULT_SERVER_PORT;
+            LOG.error("Wrong port definition:{} using default:{}", portProperty,port);
         }    
-        new AsciidoctorJServer().start(port);
+        AsciidoctorJServer server = new AsciidoctorJServer();
+        try {
+            server.start(port);
+        }catch(BindException be) {
+            if (port==-1) {
+                LOG.error("Already bind port:{}",port);
+            }
+            exit(ERROR_PORT_ALREADY_USED);
+        }catch (Exception e) {
+            LOG.error("Server cannot be started", e);
+            exit(ERROR);
+        }
+    }
+
+    private static void exit(ServerExitCodes error) {
+         System.exit(error.getExitCode());
     }
 
 }
