@@ -1,7 +1,6 @@
 = ASP - Asciidoctor Server Protocol
-
-image::https://travis-ci.org/de-jcup/asp.svg?branch=master[] 
-
+image::https://travis-ci.org/de-jcup/asp.svg?branch=master[link="https://travis-ci.org/de-jcup/asp"] 
+ 
 == About 
 
 ASP stands for `AsciiDoctor Server Protocol`.

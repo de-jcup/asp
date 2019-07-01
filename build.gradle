@@ -14,3 +14,4 @@ allprojects{
 apply from: "${rootProject.projectDir}/build-java.gradle"
 apply from: "${rootProject.projectDir}/build-maven.gradle"
 apply from: "${rootProject.projectDir}/build-eclipse.gradle"
+

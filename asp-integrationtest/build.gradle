@@ -3,3 +3,22 @@ dependencies {
     compile project(':asp-server-asciidoctorj')
     compile project(':asp-server-asciidoctorj-launcher')
 }
+
+/**
+ * Own task for full integration tests (means server runs in own process)
+ */
+task fullintegrationtest(type: Test) {
+   group 'asp'
+   description 'Starts full integration tests'
+   // integration tests seems to be very often  "up-to-date"
+   // but we want them always to be executed, so next line...
+   outputs.upToDateWhen { false }
+   /*
+    *  We must set the system property here - gradle does fork
+    * the jvm on testing and does not add system properties of calling automatically so we set
+    * integration test properties here
+    */
+   systemProperty "asp.integrationtest.full.enabled", "true"
+   systemProperty "asp.integrationtest.full.pathtojar", "${rootProject.projectDir}/asp-server-asciidoctorj/build/libs/asp-server-asciidoctorj-${version}.jar"
+
+}
