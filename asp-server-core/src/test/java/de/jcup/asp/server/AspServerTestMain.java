@@ -3,14 +3,14 @@ package de.jcup.asp.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jcup.asp.server.core.AspServer;
+import de.jcup.asp.server.core.CoreAspServer;
 
 public class AspServerTestMain {
 
     private static final Logger LOG = LoggerFactory.getLogger(AspServerTestMain.class);
     
-    public static void main(String[] args) {
-        AspServer server = new AspServer();
+    public static void main(String[] args) throws Exception {
+        CoreAspServer server = new CoreAspServer();
         server.setRequestHandler(new DummyOutputClientRequestHandler());
         String portProperty = System.getProperty("asp.server.port");
         try {

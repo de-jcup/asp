@@ -20,7 +20,7 @@ subprojects {
 	apply plugin: 'maven'
 	
 	group = "asp"
-	version = "0.2.0"
+	version = "0.3.0"
 	
 	/* Continous integration part - use build number in version when 'ci.buildNumber' is set*/
 	def buildNr = System.getenv('ci.buildNumber')
