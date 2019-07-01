@@ -63,7 +63,7 @@ public class AspClient {
         this.logHandler = logHandler;
     }
 
-    public Response convertFile(Path adocfile, Map<String, Object> options) throws AspClientException {
+    public Response convertFile(Path adocfile, Map<String, Object> options, AspClientProgressMonitor monitor ) throws AspClientException {
         Request request = createRequest();
 
         request.set(StringRequestParameterKey.COMMAND, Commands.CONVERT_FILE);
@@ -71,26 +71,26 @@ public class AspClient {
         request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
         request.set(MapRequestParameterKey.OPTIONS, options);
 
-        return callServer(request);
+        return callServer(request,monitor);
 
     }
 
     @Deprecated // will be removed in future
-    public Response resolveAttributes(File baseDir) throws AspClientException {
+    public Response resolveAttributes(File baseDir, AspClientProgressMonitor monitor) throws AspClientException {
         Request request = createRequest();
 
         request.set(StringRequestParameterKey.COMMAND, Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY);
         request.set(StringRequestParameterKey.BASE_DIR, baseDir.getAbsolutePath());
 
-        return callServer(request);
+        return callServer(request,monitor);
 
     }
 
-    public boolean isServerAlive() {
+    public boolean isServerAlive(AspClientProgressMonitor monitor ) {
         Request request = createRequest();
         request.set(StringRequestParameterKey.COMMAND, Commands.IS_ALIVE);
         try {
-            callServer(request);
+            callServer(request,monitor);
             return true;
         } catch (NoConnectionAspClientException e) {
             return false;
@@ -114,26 +114,38 @@ public class AspClient {
         return request;
     }
 
-    private Response callServer(Request r) throws AspClientException {
+    private Response callServer(Request r, AspClientProgressMonitor monitor) throws AspClientException {
+        if (monitor==null) {
+            monitor = NullAspClientProgressMonitor.NULL_PROGRESS;
+        }
         Command command = r.getCommand();
         if (command == null) {
             throw new AspClientException("No command set");
         }
-
+        if (monitor.isCanceled()) {
+            return getCancelResponse(r);
+        }
         try (Socket aspSocket = new Socket(InetAddress.getLoopbackAddress(), portNumber);
                 PrintWriter out = new PrintWriter(aspSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(aspSocket.getInputStream()));) {
-
+            if (monitor.isCanceled()) {
+                return getCancelResponse(r);
+            }
             String unencryptedRequestString = r.convertToString();
             LOG.debug("sending-unencrypted:\n{}", unencryptedRequestString);
             String encryptedRequestString = cryptoAccess.encrypt(unencryptedRequestString);
 
             out.println(encryptedRequestString);
             out.println(Request.TERMINATOR);
-
+            if (monitor.isCanceled()) {
+                return getCancelResponse(r);
+            }
             String encryptedfromServer = null;
             StringBuilder result = new StringBuilder();
             while ((encryptedfromServer = in.readLine()) != null) {
+                if (monitor.isCanceled()) {
+                    return getCancelResponse(r);
+                }
                 if (encryptedfromServer.equals(Response.TERMINATOR)) {
                     break;
                 }
@@ -143,7 +155,9 @@ public class AspClient {
                 result.append(fromServer);
                 result.append('\n');
             }
-
+            if (monitor.isCanceled()) {
+                return getCancelResponse(r);
+            }
             Response response = Response.convertFromString(result.toString());
             if (response.failed()) {
                 throw new AspClientException("Failed:" + response.getErrorMessage());
@@ -159,6 +173,19 @@ public class AspClient {
             }
             throw new AspClientException("Command " + command.getId() + " failed.", e);
         }
+    }
+    
+    private Response getCancelResponse(Request r) {
+        Command command = r.getCommand();
+        Response response = new Response();
+        String errorMessage = null;
+        if (command!=null) {
+            errorMessage="Operation '"+command.getId()+"' was canceled by user";
+        }else {
+            errorMessage="Operation was canceled by user";
+        }
+        response.setErrorMessage(errorMessage);
+        return response;
     }
 
 }

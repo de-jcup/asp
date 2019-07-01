@@ -22,7 +22,7 @@ public class AspClientTestMain {
         Map<String, Object> options = new HashMap<>();
         options.put("backend","pdf");
         
-        Response response = new AspClient(serverSecretkey).convertFile(adocfile, options);
+        Response response = new AspClient(serverSecretkey).convertFile(adocfile, options,null);
         Path path = response.getResultFilePath();
         
         System.out.println("got: result path:"+path);
