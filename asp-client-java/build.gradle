@@ -10,7 +10,7 @@ task buildDist(type: Jar) {
         // we use this to identify version inside lib. so lib can be renamed without versioning 
         attributes 'Client-Version': "${version}"
     }
-    baseName = 'asp-client'
+    baseName = 'asp-client-dist'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

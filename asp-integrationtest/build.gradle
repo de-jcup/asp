@@ -19,6 +19,6 @@ task fullintegrationtest(type: Test) {
     * integration test properties here
     */
    systemProperty "asp.integrationtest.full.enabled", "true"
-   systemProperty "asp.integrationtest.full.pathtojar", "${rootProject.projectDir}/asp-server-asciidoctorj/build/libs/asp-server-asciidoctorj-${version}.jar"
+   systemProperty "asp.integrationtest.full.pathtojar", "${rootProject.projectDir}/asp-server-asciidoctorj/build/libs/asp-server-asciidoctorj-dist-${version}.jar"
 
 }
