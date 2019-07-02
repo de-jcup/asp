@@ -8,7 +8,11 @@ public class EmbeddedAsciidoctorJServerLauncher implements ASPLauncher {
     private AsciidoctorJServer server;
 
     public EmbeddedAsciidoctorJServerLauncher() {
-        server = new AsciidoctorJServer();
+        server = createServer();
+    }
+
+    protected AsciidoctorJServer createServer() {
+        return new AsciidoctorJServer();
     }
 
     public void stopServer() {

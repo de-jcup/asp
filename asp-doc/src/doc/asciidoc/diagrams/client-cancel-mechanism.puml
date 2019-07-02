@@ -1,0 +1,14 @@
+@startuml
+
+    Caller -> AspClientProgressMonitor: creates 
+    Caller -> AspClient :calls with command and monitor object
+    AspClient -> AspClientCall :creates 
+    AspClient --> AspProgressMonitorSurveillance :registers client call for inspection 
+    AspClientCall <-- AspClientProgressMonitorSurveillance : inspects progress monitor of client call
+    AspClient -> AspClientCall :calls
+    AspClientCall <-> AspServer :communicates with server per TCP/IP
+    Caller --> AspClientProgressMonitor: changes to state "canceled" in progress monitor 
+    AspClientProgressMonitor <--AspClientProgressMonitorSurveillance
+    AspClientCall <-- AspClientProgressMonitorSurveillance : terminates socket connection on client call when progress monitor is canceled
+    AspClient <- AspClientCall : returns response 
+@enduml

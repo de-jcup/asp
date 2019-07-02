@@ -2,3 +2,6 @@
 
 == Communication protocol
 plantuml::diagrams/server-client-communication.puml[]
+
+=== Cancel mechanism
+plantuml::diagrams/client-cancel-mechanism.puml[]

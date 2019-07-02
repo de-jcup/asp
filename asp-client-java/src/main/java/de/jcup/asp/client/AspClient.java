@@ -1,12 +1,6 @@
 package de.jcup.asp.client;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
@@ -22,20 +16,19 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
 import de.jcup.asp.core.Constants;
 import de.jcup.asp.core.CryptoAccess;
-import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.core.CryptoAccess.DecryptionException;
 import de.jcup.asp.core.LogHandler;
+import de.jcup.asp.core.OutputHandler;
 
 public class AspClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(AspClient.class);
 
     private int portNumber = Constants.DEFAULT_SERVER_PORT;
-
     private CryptoAccess cryptoAccess;
     private OutputHandler outputHandler;
     private LogHandler logHandler;
-
+    private AspClientProgressMonitorSurveillance progressMonitorSurveillance;
     /**
      * Creates new ASP client.
      * 
@@ -49,6 +42,7 @@ public class AspClient {
             throw new IllegalArgumentException();
         }
         this.cryptoAccess = new CryptoAccess(base64EncodedKey);
+        this.progressMonitorSurveillance=AspClientProgressMonitorSurveillance.INSTANCE;
     }
 
     public void setPortNumber(int portNumber) {
@@ -61,6 +55,10 @@ public class AspClient {
     
     public void setLogHandler(LogHandler logHandler) {
         this.logHandler = logHandler;
+    }
+    
+    public int getPortNumber() {
+        return portNumber;
     }
 
     public Response convertFile(Path adocfile, Map<String, Object> options, AspClientProgressMonitor monitor ) throws AspClientException {
@@ -123,69 +121,32 @@ public class AspClient {
             throw new AspClientException("No command set");
         }
         if (monitor.isCanceled()) {
-            return getCancelResponse(r);
+            return AspClientCall.createCancelResponse(r);
         }
-        try (Socket aspSocket = new Socket(InetAddress.getLoopbackAddress(), portNumber);
-                PrintWriter out = new PrintWriter(aspSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(aspSocket.getInputStream()));) {
-            if (monitor.isCanceled()) {
-                return getCancelResponse(r);
-            }
-            String unencryptedRequestString = r.convertToString();
-            LOG.debug("sending-unencrypted:\n{}", unencryptedRequestString);
-            String encryptedRequestString = cryptoAccess.encrypt(unencryptedRequestString);
-
-            out.println(encryptedRequestString);
-            out.println(Request.TERMINATOR);
-            if (monitor.isCanceled()) {
-                return getCancelResponse(r);
-            }
-            String encryptedfromServer = null;
-            StringBuilder result = new StringBuilder();
-            while ((encryptedfromServer = in.readLine()) != null) {
-                if (monitor.isCanceled()) {
-                    return getCancelResponse(r);
-                }
-                if (encryptedfromServer.equals(Response.TERMINATOR)) {
-                    break;
-                }
-                LOG.debug("receiving-encrypted:{}", encryptedfromServer);
-                String fromServer = cryptoAccess.decrypt(encryptedfromServer);
-                LOG.debug("receiving-unencrypted:{}", fromServer);
-                result.append(fromServer);
-                result.append('\n');
-            }
-            if (monitor.isCanceled()) {
-                return getCancelResponse(r);
-            }
-            Response response = Response.convertFromString(result.toString());
-            if (response.failed()) {
-                throw new AspClientException("Failed:" + response.getErrorMessage());
-            }
-            return response;
-
-        } catch (Exception e) {
-            if (e instanceof DecryptionException) {
-                throw new FatalAspClientException("Crypto failure, normally untrusted ASP server", e);
-            }
-            if (e instanceof ConnectException) {
-                throw new NoConnectionAspClientException("Connection to port " + portNumber + " refused", e);
-            }
-            throw new AspClientException("Command " + command.getId() + " failed.", e);
+        AspClientCall cr = new AspClientCall(this, r,monitor);
+        
+        progressMonitorSurveillance.inspect(cr,0);
+        
+        cr.run();
+      
+        if (cr.getException()!=null) {
+            throw cr.getException();
         }
+        if (cr.getResponse()==null) {
+            throw new AspClientException("Unhandled request");
+        }
+        return cr.getResponse();
+    }
+
+    public String encrypt(String unencryptedRequestString) {
+        return cryptoAccess.encrypt(unencryptedRequestString);
     }
     
-    private Response getCancelResponse(Request r) {
-        Command command = r.getCommand();
-        Response response = new Response();
-        String errorMessage = null;
-        if (command!=null) {
-            errorMessage="Operation '"+command.getId()+"' was canceled by user";
-        }else {
-            errorMessage="Operation was canceled by user";
-        }
-        response.setErrorMessage(errorMessage);
-        return response;
+    public String decrypt(String unencryptedRequestString) throws DecryptionException {
+        return cryptoAccess.decrypt(unencryptedRequestString);
     }
+    
+    
+    
 
 }

@@ -1,4 +1,4 @@
-package de.jcup.asp.integrationtest;
+package de.jcup.asp.server.asciidoctorj.launcher;
 
 import static org.junit.Assert.*;
 
@@ -18,25 +18,26 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.core.OutputHandler;
+import de.jcup.asp.integrationtest.FullIntegrationTestRule;
 import de.jcup.asp.server.asciidoctorj.launcher.ExternalProcessAsciidoctorJServerLauncher;
 
-public class ExternalServerIntTest {
+public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
     private int port;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExternalServerIntTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExternalProcessAsciidoctorJServerLauncherIntTest.class);
 
 
     @Rule
     public FullIntegrationTestRule fullIntegrationTestRule = new FullIntegrationTestRule();
 
-    private ExternalProcessAsciidoctorJServerLauncher launcher;
+    private ExternalProcessAsciidoctorJServerLauncher launcherToTest;
 
     @Before
     public void before() {
         port = 4447;
-        launcher = new ExternalProcessAsciidoctorJServerLauncher(fullIntegrationTestRule.getEnsuredPathToServerJar(), port);
-        launcher.setOutputHandler(new OutputHandler() {
+        launcherToTest = new ExternalProcessAsciidoctorJServerLauncher(fullIntegrationTestRule.getEnsuredPathToServerJar(), port);
+        launcherToTest.setOutputHandler(new OutputHandler() {
 
             @Override
             public void output(String message) {
@@ -48,20 +49,20 @@ public class ExternalServerIntTest {
 
     @After
     public void after() {
-        launcher.stopServer();
+        launcherToTest.stopServer();
     }
 
     @Test
     public void server_launch_by_jar() throws Exception {
 
-        String key = launcher.launch(30);
+        String key = launcherToTest.launch(30);
         callServerAliveMultipleTimes(key, port);
     }
 
     @Test
     public void long_running_action_like_convert_file_to_pdf_can_be_canceled() throws Exception {
         /* prepare */
-        String key = launcher.launch(30);
+        String key = launcherToTest.launch(30);
         AspClient client = new AspClient(key);
         client.setPortNumber(port);
         
