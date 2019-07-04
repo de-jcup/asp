@@ -26,6 +26,7 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
     private int port;
     private String pathToJava;
     private String pathToServerJar;
+    private boolean showSecretKey;
 
     private Process process;
     private OutputHandler outputHandler;
@@ -39,6 +40,10 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
         this.pathToJava = pathTojava;
         this.pathToServerJar = pathToServerJar;
         this.port=port;
+    }
+    
+    public void setShowSecretKey(boolean showSecretKey) {
+        this.showSecretKey = showSecretKey;
     }
 
     /**
@@ -185,6 +190,9 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
                             int secretPrefix = line.indexOf(CoreConstants.SERVER_SECRET_OUTPUT_PREFIX);
                             if (secretPrefix!=-1) {
                                 secretKey=line.substring(secretPrefix+CoreConstants.SERVER_SECRET_OUTPUT_PREFIX.length());
+                                if (!showSecretKey) {
+                                    line = line.substring(0,secretPrefix)+CoreConstants.SERVER_SECRET_OUTPUT_PREFIX+"xxxxxxxxxxxxxxxxxxxxxxx";
+                                }
                             }
                             if (outputHandler != null) {
                                 outputHandler.output(line);
