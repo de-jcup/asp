@@ -38,27 +38,5 @@ subprojects {
         }
       }
     }
-	/**
-	 * Task to create source jars
-	 */
-	task sourcesJar(type: Jar, dependsOn:classes) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-    /**
-	 * Task to create javadoc jars
-	 */
-	task javadocJar(type: Jar, dependsOn:javadoc) {
-		classifier = 'javadoc'
-		from javadoc.destinationDir
-	}
-
-	/**
-	 * Define artifacts
-	 */
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
-	}
+	
 }

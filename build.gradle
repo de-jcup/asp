@@ -5,6 +5,24 @@
  * using 'Full multi gradle project (Java)' template
  * ============================================================================
  */
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+    }
+}
+ext {
+projectType = [
+
+                bintrayDistUploads: [
+                        project(':asp-server-asciidoctorj'),
+                        project(':asp-server-asciidoctorj-launcher')
+                ]
+            ]
+}
+
 allprojects{
 	apply from: "${rootProject.projectDir}/libraries.gradle"
 }

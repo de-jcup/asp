@@ -16,11 +16,11 @@ dependencies {
 
 }
 
-
 task buildDist(type: Jar) {
 
     group = 'ASP'
     description = 'build distribution'
+    classifier = 'dist'
     
     manifest {
         attributes 'Main-Class': 'de.jcup.asp.server.asciidoctorj.AsciidoctorJServerApplication',
@@ -29,4 +29,24 @@ task buildDist(type: Jar) {
     baseName = 'asp-server-asciidoctorj-dist'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+
+publishing {
+    publications {
+        bintrayDistPublication(MavenPublication) {
+            from components.java
+            artifact buildDist
+            groupId 'de.jcup.asp'
+            artifactId "${project.name}"
+            version "${version}"
+        }
+    }
+}
+
+/**
+ * Define artifacts
+ */
+artifacts {
+    archives buildDist
 }

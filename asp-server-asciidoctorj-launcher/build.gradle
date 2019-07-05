@@ -1,10 +1,12 @@
 dependencies {
     compile project(':asp-core')
+    compile project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
 }
 
 task buildDist(type: Jar) {
     group = 'ASP'
     description = 'build distribution'
+    classifier = 'dist'
 
     manifest {
         // we use this to identify version inside lib. so lib can be renamed without versioning 
@@ -13,4 +15,23 @@ task buildDist(type: Jar) {
     baseName = 'asp-server-asciidoctorj-launcher-dist'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+publishing {
+    publications {
+        bintrayDistPublication(MavenPublication) {
+            from components.java
+            artifact buildDist
+            groupId 'de.jcup.asp'
+            artifactId "${project.name}"
+            version "${version}"
+        }
+    }
+}
+/**
+ * Define artifacts
+ */
+artifacts {
+    archives buildDist
+    
 }

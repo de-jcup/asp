@@ -11,21 +11,85 @@ allprojects{
 	repositories {
 		/* add your local maven repo - so you can deploy there */
 		mavenLocal() 
+		jcenter()
 		/* add maven central */
 		mavenCentral()
 	}
-
 }
+
+
 subprojects {
 	apply plugin: 'maven'
 	
 	group = "asp"
 	version = "0.3.0"
-	
 	/* Continous integration part - use build number in version when 'ci.buildNumber' is set*/
 	def buildNr = System.getenv('ci.buildNumber')
   	if (buildNr != null && ! buildNr.isEmpty()){
 		version= version + "_"+buildNr
 	}
-		
+
+    /**
+     * Task to create source jars
+     */
+    task sourcesJar(type: Jar, dependsOn:classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    /**
+     * Task to create javadoc jars
+     */
+    task javadocJar(type: Jar, dependsOn:javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+    
+    /**
+     * Define artifacts
+     */
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+    
+    
+	if (! projectType.bintrayDistUploads.contains(project)){
+        return;
+    }
+    
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'maven-publish'
+    // https://docs.gradle.org/current/userguide/publishing_maven.html
+    // https://github.com/bintray/gradle-bintray-plugin
+    // https://reflectoring.io/guide-publishing-to-bintray-with-gradle/
+    bintray {
+        user =  System.getProperty('bintray.user')
+        key =  System.getProperty('bintray.key')
+
+        def userOrg='de-jcup'
+        
+        publications = ['bintrayDistPublication'] 
+        
+        pkg {
+            repo = 'asp'
+            name = 'distribution'
+            
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/de-jcup/asp.git'
+            
+            websiteUrl = 'https://github.com/de-jcup/asp'
+            issueTrackerUrl = 'https://github.com/de-jcup/asp/issues'
+            
+            version {
+                name = "0.x"
+                released  = new Date()
+                
+                gpg {
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                    passphrase = System.getProperty('mypassphrase')
+                }
+            }
+        }
+    }
 }
