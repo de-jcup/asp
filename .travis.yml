@@ -10,6 +10,7 @@ before_install:
 - chmod +x gradlew
 
 script:
-- ./gradlew clean buildDist -x :asp-integrationtest:test
-- ./gradlew fullintegrationtest
+- ./gradlew clean buildDist
+- ./gradlew test -x asp-integrationtest
+- ./gradlew :asp-integrationtest:fullintegrationtest
 
