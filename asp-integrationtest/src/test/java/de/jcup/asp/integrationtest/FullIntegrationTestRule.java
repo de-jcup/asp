@@ -1,5 +1,9 @@
 package de.jcup.asp.integrationtest;
 
+import static org.junit.Assert.*;
+
+import java.io.File;
+
 import org.junit.Assume;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -28,7 +32,7 @@ public class FullIntegrationTestRule implements TestRule {
 
             integrationTestEnabled = Boolean.getBoolean(EXTERNAL_SERVER_TEST_ENABLED);
             if (!integrationTestEnabled) {
-                String message = "Skipped external intergration test, to enabled define -D" + EXTERNAL_SERVER_TEST_ENABLED + "=true";
+                String message = "Skipped full integration test, to enabled define\n-D" + EXTERNAL_SERVER_TEST_ENABLED + "=true";
                 Assume.assumeTrue(message, false);
             }
             next.evaluate();
@@ -40,6 +44,11 @@ public class FullIntegrationTestRule implements TestRule {
        String path =  System.getProperty(PATH_TO_SERVER_JAR);
        if (path==null || path.isEmpty()) {
            throw new IllegalStateException("Path to asp server jar not set! Testcase corrupt");
+       }
+       File file = new File(path).getAbsoluteFile();
+       System.out.println(">> using server: "+file.getAbsolutePath());
+       if (!file.exists()) {
+           fail("File does not exist:"+file);
        }
        return path;
     }

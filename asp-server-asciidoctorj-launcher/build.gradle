@@ -12,7 +12,7 @@ task buildDist(type: Jar) {
         // we use this to identify version inside lib. so lib can be renamed without versioning 
         attributes 'Launcher-Version': "${version}"
     }
-    baseName = 'asp-server-asciidoctorj-launcher-dist'
+    baseName = "${project.name}"
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
