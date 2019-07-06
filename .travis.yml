@@ -11,6 +11,6 @@ before_install:
 
 script:
 - ./gradlew clean buildDist
-- ./gradlew test -x asp-integrationtest
+- ./gradlew test -x :asp-integrationtest:test
 - ./gradlew :asp-integrationtest:fullintegrationtest
 
