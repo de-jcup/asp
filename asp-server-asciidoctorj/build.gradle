@@ -24,7 +24,7 @@ task buildDist(type: Jar) {
     
     manifest {
         attributes 'Main-Class': 'de.jcup.asp.server.asciidoctorj.AsciidoctorJServerApplication',
-                   'Server-Version': "${version}"
+                   'AspServer-Version': "${version}"
     }
     baseName = "${project.name}"
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

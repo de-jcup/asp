@@ -108,7 +108,7 @@ public class AspClient {
 
     private Request createRequest() {
         Request request = new Request();
-        request.set(StringRequestParameterKey.VERSION, "1.0");
+        request.set(StringRequestParameterKey.VERSION, Version.getVersion());
         return request;
     }
 

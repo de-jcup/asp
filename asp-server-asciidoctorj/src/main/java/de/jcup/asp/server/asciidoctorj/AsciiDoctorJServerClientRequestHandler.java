@@ -21,7 +21,7 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
         LOG.debug("Request:\n" + request.convertToString());
         Command command = request.getCommand();
         Response response = new Response();
-        response.set(StringResponseResultKey.VERSION, "1.0"); 
+        response.set(StringResponseResultKey.VERSION, Version.getVersion()); 
 
         if (Commands.CONVERT_FILE.equals(command)) {
             ConvertLocalFileService.INSTANCE.convertFile(request, response);
