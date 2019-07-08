@@ -14,31 +14,34 @@ import org.slf4j.LoggerFactory;
 import de.jcup.asp.api.Command;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
+import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.CryptoAccess.DecryptionException;
 
-class AspClientCall implements Runnable {
-    private static final Logger LOG = LoggerFactory.getLogger(AspClientCall.class);
+class AspClientAction implements Runnable {
+    private static final Logger LOG = LoggerFactory.getLogger(AspClientAction.class);
     private Response response;
-    private Request r;
+    private Request request;
     private AspClientProgressMonitor progressMonitor;
     private AspClientException exception;
-    private AspClient client;
 
     private Socket aspSocket;
 
     private AspClientCommunicationListener communicationListener;
+    private CryptoAccess cryptoAccess;
+    private int port;
 
-    AspClientCall(AspClient client, AspClientCommunicationListener listener, Request r, AspClientProgressMonitor monitor) {
-        this.client = client;
+    AspClientAction(CryptoAccess cryptoAccess, int port, AspClientCommunicationListener listener, Request request, AspClientProgressMonitor monitor) {
+        this.cryptoAccess = cryptoAccess;
         this.communicationListener=listener;
-        this.r = r;
+        this.request = request;
+        this.port=port;
         this.progressMonitor = monitor;
     }
 
     @Override
     public void run() {
         try {
-            response = internalCallServer(r, progressMonitor);
+            response = internalCallServer(request, progressMonitor);
         } catch (AspClientException e) {
             this.exception = e;
         }
@@ -72,8 +75,7 @@ class AspClientCall implements Runnable {
 
     private Response internalCallServer(Request r, AspClientProgressMonitor monitor) throws FatalAspClientException, NoConnectionAspClientException, AspClientException {
         Command command = r.getCommand();
-        int portNumber = client.getPortNumber();
-        try (Socket aspSocket = new Socket(InetAddress.getLoopbackAddress(), portNumber);
+        try (Socket aspSocket = new Socket(InetAddress.getLoopbackAddress(), port);
                 PrintWriter out = new PrintWriter(aspSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(aspSocket.getInputStream()));) {
             this.aspSocket = aspSocket;
@@ -84,7 +86,7 @@ class AspClientCall implements Runnable {
             if (communicationListener!=null) {
                 communicationListener.sending(unencryptedRequestString);
             }
-            String encryptedRequestString = client.encrypt(unencryptedRequestString);
+            String encryptedRequestString = cryptoAccess.encrypt(unencryptedRequestString);
 
             out.println(encryptedRequestString);
             out.println(Request.TERMINATOR);
@@ -101,7 +103,7 @@ class AspClientCall implements Runnable {
                     break;
                 }
                 LOG.debug("receiving-encrypted:{}", encryptedfromServer);
-                String fromServer = client.decrypt(encryptedfromServer);
+                String fromServer = cryptoAccess.decrypt(encryptedfromServer);
                 if (communicationListener!=null) {
                     communicationListener.receiving(fromServer);
                 }
@@ -119,12 +121,12 @@ class AspClientCall implements Runnable {
 
         } catch (Exception e) {
             if (monitor.isCanceled()) {
-                return AspClientCall.createCancelResponse(r);
+                return AspClientAction.createCancelResponse(r);
             }
             if (e instanceof DecryptionException) {
                 throw new FatalAspClientException("Crypto failure, normally untrusted ASP server", e);
             }else  if (e instanceof ConnectException) {
-                throw new NoConnectionAspClientException("Connection to port " + portNumber + " refused", e);
+                throw new NoConnectionAspClientException("Connection to port " + port + " refused", e);
             }else {
                 throw new AspClientException("Command " + command.getId() + " failed.", e);
             }

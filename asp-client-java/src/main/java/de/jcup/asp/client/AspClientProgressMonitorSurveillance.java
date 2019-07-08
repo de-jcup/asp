@@ -18,7 +18,7 @@ public class AspClientProgressMonitorSurveillance {
 
     private Thread surveillanceThread;
     private QueueRunnable queueRunnable;
-    private Set<AspClientCall> aspClientCalls = new LinkedHashSet<AspClientCall>();
+    private Set<AspClientAction> aspClientActions = new LinkedHashSet<AspClientAction>();
 
     private AspClientProgressMonitorSurveillance() {
         ensureRunningClientWorkerThread();
@@ -34,31 +34,31 @@ public class AspClientProgressMonitorSurveillance {
         surveillanceThread.start();
     }
 
-    public void cancel(AspClientCall aspClientCall) {
+    public void cancel(AspClientAction aspClientAction) {
         try {
-            aspClientCall.cancel();
+            aspClientAction.cancel();
         } catch (IOException e) {
             LOG.warn("Cancel operation problematic", e);
         }
     }
 
-    public void inspect(AspClientCall clientCall, int timeOutInMilliseconds) {
+    public void inspect(AspClientAction clientCall, int timeOutInMilliseconds) {
         Objects.requireNonNull(clientCall);
-        synchronized (aspClientCalls) {
-            aspClientCalls.add(clientCall);
+        synchronized (aspClientActions) {
+            aspClientActions.add(clientCall);
         }
     }
 
     public class QueueRunnable implements Runnable {
-        AspClientCall current;
+        AspClientAction current;
 
         @Override
         public void run() {
-            List<AspClientCall> callsToRemove = new ArrayList<AspClientCall>();
+            List<AspClientAction> callsToRemove = new ArrayList<AspClientAction>();
             while (true) {
-                synchronized (aspClientCalls) {
+                synchronized (aspClientActions) {
                     try {
-                        for (AspClientCall call : aspClientCalls) {
+                        for (AspClientAction call : aspClientActions) {
                             if (call.getProgressMonitor().isCanceled()) {
                                 callsToRemove.add(call);
                                 call.cancel();
@@ -66,7 +66,7 @@ public class AspClientProgressMonitorSurveillance {
                                 callsToRemove.add(call);
                             }
                         }
-                        aspClientCalls.removeAll(callsToRemove);
+                        aspClientActions.removeAll(callsToRemove);
                     } catch (Exception e) {
                         LOG.error("Progress monitor surveillance failure", e);
                     }

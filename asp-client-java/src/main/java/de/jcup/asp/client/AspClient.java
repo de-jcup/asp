@@ -16,7 +16,6 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
 import de.jcup.asp.core.Constants;
 import de.jcup.asp.core.CryptoAccess;
-import de.jcup.asp.core.CryptoAccess.DecryptionException;
 import de.jcup.asp.core.LogHandler;
 import de.jcup.asp.core.OutputHandler;
 
@@ -134,13 +133,13 @@ public class AspClient {
             throw new AspClientException("No command set");
         }
         if (monitor.isCanceled()) {
-            return AspClientCall.createCancelResponse(r);
+            return AspClientAction.createCancelResponse(r);
         }
         AspClientCommunicationListener listener = null;
         if (showCommunication) {
             listener =outputHandlerCommunicationListener;
         }
-        AspClientCall cr = new AspClientCall(this, listener, r,monitor);
+        AspClientAction cr = new AspClientAction(cryptoAccess, portNumber, listener, r,monitor);
         
         progressMonitorSurveillance.inspect(cr,0);
         
@@ -154,16 +153,5 @@ public class AspClient {
         }
         return cr.getResponse();
     }
-
-    public String encrypt(String unencryptedRequestString) {
-        return cryptoAccess.encrypt(unencryptedRequestString);
-    }
-    
-    public String decrypt(String unencryptedRequestString) throws DecryptionException {
-        return cryptoAccess.decrypt(unencryptedRequestString);
-    }
-    
-    
-    
 
 }

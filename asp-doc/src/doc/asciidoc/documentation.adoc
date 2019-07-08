@@ -1,7 +1,27 @@
+:toc: 
+
 = Asciidoctor Server Protocol (ASP)
 
-== Communication protocol
+== First steps
+=== How to start ASP server in external process and communicate
+[source,java]
+.ExternalProcessExample.java
+----
+include::./../../test/java/de/jcup/asp/example/ExternalProcessExample.java[tags=launcherExample]  
+----
+<1> Create the launcher
+<2> Launch server (timeout for server start is defined with 30 seconds) and fetch secret key for
+    encrypted clienet server communication 
+<3> Create new client, with secret key
+<4> Set some options - in this case we only setup backend to HTML
+<5> Execute convert file action
+<6> *Important:* This will terminate external process, otherwise ASP server will keep on running after this JVM has stopped!
+
+TIP: Complete example code can be found at https://github.com/de-jcup/asp/tree/master/asp-doc/src/test/java/ExternalProcessExample.java
+
+== Architecture
+=== Communication protocol
 plantuml::diagrams/server-client-communication.puml[]
 
-=== Cancel mechanism
+==== Cancel mechanism
 plantuml::diagrams/client-cancel-mechanism.puml[]
