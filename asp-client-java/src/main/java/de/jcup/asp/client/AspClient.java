@@ -28,7 +28,10 @@ public class AspClient {
     private CryptoAccess cryptoAccess;
     private OutputHandler outputHandler;
     private LogHandler logHandler;
+    private boolean showCommunication;
     private AspClientProgressMonitorSurveillance progressMonitorSurveillance;
+    private OutputHandlerCommunicationListener outputHandlerCommunicationListener;
+
     /**
      * Creates new ASP client.
      * 
@@ -42,15 +45,25 @@ public class AspClient {
             throw new IllegalArgumentException();
         }
         this.cryptoAccess = new CryptoAccess(base64EncodedKey);
+        this.outputHandlerCommunicationListener=new OutputHandlerCommunicationListener();
         this.progressMonitorSurveillance=AspClientProgressMonitorSurveillance.INSTANCE;
     }
 
+    /**
+     * When enabled communication output is shown in output handler
+     * @param show
+     */
+    public void setShowCommunication(boolean show) {
+        this.showCommunication = show;
+    }
+    
     public void setPortNumber(int portNumber) {
         this.portNumber = portNumber;
     }
     
     public void setOutputHandler(OutputHandler outputHandler) {
         this.outputHandler = outputHandler;
+        outputHandlerCommunicationListener.setOutputHandler(outputHandler);
     }
     
     public void setLogHandler(LogHandler logHandler) {
@@ -123,7 +136,11 @@ public class AspClient {
         if (monitor.isCanceled()) {
             return AspClientCall.createCancelResponse(r);
         }
-        AspClientCall cr = new AspClientCall(this, r,monitor);
+        AspClientCommunicationListener listener = null;
+        if (showCommunication) {
+            listener =outputHandlerCommunicationListener;
+        }
+        AspClientCall cr = new AspClientCall(this, listener, r,monitor);
         
         progressMonitorSurveillance.inspect(cr,0);
         

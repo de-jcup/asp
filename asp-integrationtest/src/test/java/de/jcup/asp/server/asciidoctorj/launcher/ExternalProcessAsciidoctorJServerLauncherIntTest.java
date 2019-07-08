@@ -1,9 +1,8 @@
 package de.jcup.asp.server.asciidoctorj.launcher;
 
+import static de.jcup.asp.integrationtest.AdocTestFiles.*;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
@@ -19,7 +18,6 @@ import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.integrationtest.FullIntegrationTestRule;
-import de.jcup.asp.server.asciidoctorj.launcher.ExternalProcessAsciidoctorJServerLauncher;
 
 public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
@@ -110,12 +108,6 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
             assertEquals(expected, alive);
         }
     }
-    
 
-    private Path createSimpleAdocTestFile() throws IOException {
-        Path adocfile = Files.createTempFile("asp_test", ".adoc");
-        Files.write(adocfile, "== Test\nThis is just a test".getBytes());
-        return adocfile;
-    }
 
 }

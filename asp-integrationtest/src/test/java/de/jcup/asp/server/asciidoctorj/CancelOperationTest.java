@@ -1,9 +1,8 @@
 package de.jcup.asp.server.asciidoctorj;
 
+import static de.jcup.asp.integrationtest.AdocTestFiles.*;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
@@ -19,7 +18,6 @@ import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.integrationtest.FakeRequestHandler;
 import de.jcup.asp.integrationtest.TestServerSupport;
 import de.jcup.asp.integrationtest.TimeAssertData;
-
 public class CancelOperationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CancelOperationTest.class);
@@ -119,13 +117,5 @@ public class CancelOperationTest {
             assertTrue("The pdf creation canceling must be higher/equal "+timeset.getSeconds()+" seconds!, but was:"+timeInSeconds,timeInSeconds>=timeset.getSeconds());
         }
     }
-    
-    
-    private Path createSimpleAdocTestFile(String addition) throws IOException {
-        Path adocfile = Files.createTempFile("asp_test", ".adoc");
-        Files.write(adocfile, ("== Test\nThis is just a test\n"+addition).getBytes());
-        return adocfile;
-    }
-
 
 }

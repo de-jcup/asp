@@ -9,13 +9,21 @@ import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringResponseResultKey;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileService;
+import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileServiceImpl;
 import de.jcup.asp.server.asciidoctorj.service.ResolveAttributesService;
 import de.jcup.asp.server.core.ClientRequestHandler;
 
 public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(AsciiDoctorJServerClientRequestHandler.class);
+    private ConvertLocalFileService converterLocalFileService;
+    private ResolveAttributesService resolveAttributesService;
 
+    public AsciiDoctorJServerClientRequestHandler() {
+        this.converterLocalFileService = createConverterLocalFileService();
+        this.resolveAttributesService = createResolveAttributeService();
+    }
+    
     @Override
     public Response handleRequest(Request request) {
         LOG.debug("Request:\n" + request.convertToString());
@@ -24,14 +32,22 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
         response.set(StringResponseResultKey.VERSION, Version.getVersion()); 
 
         if (Commands.CONVERT_FILE.equals(command)) {
-            ConvertLocalFileService.INSTANCE.convertFile(request, response);
+            converterLocalFileService.convertFile(request, response);
         } else if (Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY.equals(command)) {
-            ResolveAttributesService.INSTANCE.resolveAttributesFromDirectory(request,response);
+            resolveAttributesService.resolveAttributesFromDirectory(request,response);
         } else {
             response.setErrorMessage("Unsupported command:" + command);
         }
         return response;
 
+    }
+    
+    ResolveAttributesService createResolveAttributeService() {
+        return ResolveAttributesService.INSTANCE;
+    }
+
+    ConvertLocalFileService createConverterLocalFileService() {
+        return ConvertLocalFileServiceImpl.INSTANCE;
     }
 
 }

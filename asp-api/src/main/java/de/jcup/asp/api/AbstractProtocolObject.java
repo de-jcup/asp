@@ -1,5 +1,6 @@
 package de.jcup.asp.api;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class AbstractProtocolObject {
@@ -55,6 +56,9 @@ public class AbstractProtocolObject {
      * @param map
      */
     private void internalSetMap(APIKey<?> mapKey, Map<String, Object> map) {
+        if (map==null) {
+            map = new HashMap<String, Object>(0);
+        }
         data.jsonObject.add(mapKey.getId(), mapToJson.toJSON(map));
     }
 

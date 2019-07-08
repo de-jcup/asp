@@ -18,7 +18,6 @@ import de.jcup.asp.core.CryptoAccess.DecryptionException;
 
 class AspClientCall implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(AspClientCall.class);
-
     private Response response;
     private Request r;
     private AspClientProgressMonitor progressMonitor;
@@ -27,8 +26,11 @@ class AspClientCall implements Runnable {
 
     private Socket aspSocket;
 
-    AspClientCall(AspClient client, Request r, AspClientProgressMonitor monitor) {
+    private AspClientCommunicationListener communicationListener;
+
+    AspClientCall(AspClient client, AspClientCommunicationListener listener, Request r, AspClientProgressMonitor monitor) {
         this.client = client;
+        this.communicationListener=listener;
         this.r = r;
         this.progressMonitor = monitor;
     }
@@ -79,7 +81,9 @@ class AspClientCall implements Runnable {
                 return createCancelResponse(r);
             }
             String unencryptedRequestString = r.convertToString();
-            LOG.debug("sending-unencrypted:\n{}", unencryptedRequestString);
+            if (communicationListener!=null) {
+                communicationListener.sending(unencryptedRequestString);
+            }
             String encryptedRequestString = client.encrypt(unencryptedRequestString);
 
             out.println(encryptedRequestString);
@@ -98,7 +102,9 @@ class AspClientCall implements Runnable {
                 }
                 LOG.debug("receiving-encrypted:{}", encryptedfromServer);
                 String fromServer = client.decrypt(encryptedfromServer);
-                LOG.debug("receiving-unencrypted:{}", fromServer);
+                if (communicationListener!=null) {
+                    communicationListener.receiving(fromServer);
+                }
                 result.append(fromServer);
                 result.append('\n');
             }
