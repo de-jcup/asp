@@ -82,7 +82,7 @@ subprojects {
             issueTrackerUrl = 'https://github.com/de-jcup/asp/issues'
             
             version {
-                name = "0.x"
+                name = "1.0.x"
                 released  = new Date()
                 
                 gpg {
