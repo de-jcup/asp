@@ -16,7 +16,7 @@ class ProtocolData {
     }
     
     static ProtocolData convertFromString(String data) throws ProtocolDataException {
-           LOG.debug("convert from String:{}",data);
+           LOG.trace("convert from String:{}",data);
            
            ProtocolData r = new ProtocolData();
            if (data==null) {

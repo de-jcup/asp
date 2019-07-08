@@ -18,6 +18,7 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.LaunchException;
+import de.jcup.asp.integrationtest.TestConstants;
 
 public class EmbeddedAsciidoctorJServerLauncherIntTest {
 
@@ -29,7 +30,7 @@ public class EmbeddedAsciidoctorJServerLauncherIntTest {
     
     @Before
     public void before() {
-        port = 4447;
+        port = TestConstants.EMBEDDED_TESTSERVER_PORT+1;
         launcherToTest = new EmbeddedAsciidoctorJServerLauncher();
     }
 

@@ -102,7 +102,7 @@ class AspClientAction implements Runnable {
                 if (encryptedfromServer.equals(Response.TERMINATOR)) {
                     break;
                 }
-                LOG.debug("receiving-encrypted:{}", encryptedfromServer);
+                LOG.trace("receiving-encrypted:{}", encryptedfromServer);
                 String fromServer = cryptoAccess.decrypt(encryptedfromServer);
                 if (communicationListener!=null) {
                     communicationListener.receiving(fromServer);

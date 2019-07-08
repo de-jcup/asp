@@ -16,6 +16,7 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.integrationtest.FakeRequestHandler;
+import de.jcup.asp.integrationtest.TestConstants;
 import de.jcup.asp.integrationtest.TestServerSupport;
 import de.jcup.asp.integrationtest.TimeAssertData;
 public class CancelOperationTest {
@@ -29,7 +30,7 @@ public class CancelOperationTest {
     public void before() throws Exception{
         fakeRequestHandler = new FakeRequestHandler();
         integrationTestServersupport = new TestServerSupport(fakeRequestHandler);
-        client = integrationTestServersupport.launchServerAndGetPreparedClient(4447);
+        client = integrationTestServersupport.launchServerAndGetPreparedClient(TestConstants.EMBEDDED_TESTSERVER_PORT);
     }
     
     @After

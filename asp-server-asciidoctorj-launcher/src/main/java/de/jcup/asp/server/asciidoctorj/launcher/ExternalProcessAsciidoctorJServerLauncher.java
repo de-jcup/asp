@@ -17,12 +17,13 @@ import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.core.ServerExitCodes;
 
 /**
- * This ASP launcher will create a new java process and start ASP server from given path to jar.
- * A {@link OutputHandler} can be set to obtain error and normal output from processs.
+ * This ASP launcher will create a new java process and start ASP server from
+ * given path to jar. A {@link OutputHandler} can be set to obtain error and
+ * normal output from processs.
  *
  */
 public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
-    
+
     private int port;
     private String pathToJava;
     private String pathToServerJar;
@@ -31,19 +32,24 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
     private Process process;
     private OutputHandler outputHandler;
     private LogHandler logHandler;
+    private boolean showServerOutput;
 
     public ExternalProcessAsciidoctorJServerLauncher(String pathToServerJar, int port) {
-        this(null, pathToServerJar,port);
+        this(null, pathToServerJar, port);
     }
 
-    public ExternalProcessAsciidoctorJServerLauncher(String pathTojava, String pathToServerJar,int port) {
+    public ExternalProcessAsciidoctorJServerLauncher(String pathTojava, String pathToServerJar, int port) {
         this.pathToJava = pathTojava;
         this.pathToServerJar = pathToServerJar;
-        this.port=port;
+        this.port = port;
     }
-    
+
     public void setShowSecretKey(boolean showSecretKey) {
         this.showSecretKey = showSecretKey;
+    }
+
+    public void setShowServerOutput(boolean showServerOutput) {
+        this.showServerOutput = showServerOutput;
     }
 
     /**
@@ -51,12 +57,12 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
      * 
      * @return secret server key
      */
-    public String launch(int timeOutInSeconds) throws LaunchException{
+    public String launch(int timeOutInSeconds) throws LaunchException {
         ServerStartRunnable runnable = new ServerStartRunnable(port);
         Thread thread = new Thread(runnable, "ASP Launcher, port:" + port);
         thread.setDaemon(true);
         thread.start();
-     
+
         waitForSecretKey(timeOutInSeconds, runnable);
         return runnable.secretKey;
     }
@@ -64,32 +70,31 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
     private void waitForSecretKey(int timeOutInSeconds, ServerStartRunnable runnable) throws LaunchException {
         Duration acceptedmax = Duration.ofSeconds(timeOutInSeconds);
         Instant start = Instant.now();
-        
-        
-        while ( hasNotEnded() && runnable.failed==null && runnable.secretKey == null) {
+
+        while (hasNotEnded() && runnable.failed == null && runnable.secretKey == null) {
             try {
-               Thread.sleep(500);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
-               Thread.currentThread().interrupt();
-               break;
+                Thread.currentThread().interrupt();
+                break;
             }
             Instant finish = Instant.now();
             Duration duration = Duration.between(start, finish);
-            if (duration.compareTo(acceptedmax)>0) {
-                throw new LaunchException("Timed out after "+duration.getSeconds()+" seconds");
+            if (duration.compareTo(acceptedmax) > 0) {
+                throw new LaunchException("Timed out after " + duration.getSeconds() + " seconds");
             }
-            
+
         }
-        if (runnable.failed!=null) {
-            throw new LaunchException("Was not able to launch server on port:"+port, runnable.failed);
+        if (runnable.failed != null) {
+            throw new LaunchException("Was not able to launch server on port:" + port, runnable.failed);
         }
-        if (runnable.secretKey==null) {
-            throw new LaunchException("Server did not return secret!",null);
+        if (runnable.secretKey == null) {
+            throw new LaunchException("Server did not return secret!", null);
         }
     }
 
     private boolean hasNotEnded() {
-        if (process==null) {
+        if (process == null) {
             return true;// process has not been started
         }
         if (process.isAlive()) {
@@ -188,14 +193,16 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
                         if (c == '\n') {
                             String line = lineStringBuffer.toString();
                             int secretPrefix = line.indexOf(CoreConstants.SERVER_SECRET_OUTPUT_PREFIX);
-                            if (secretPrefix!=-1) {
-                                secretKey=line.substring(secretPrefix+CoreConstants.SERVER_SECRET_OUTPUT_PREFIX.length());
+                            if (secretPrefix != -1) {
+                                secretKey = line.substring(secretPrefix + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX.length());
                                 if (!showSecretKey) {
-                                    line = line.substring(0,secretPrefix)+CoreConstants.SERVER_SECRET_OUTPUT_PREFIX+"xxxxxxxxxxxxxxxxxxxxxxx";
+                                    line = line.substring(0, secretPrefix) + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX + "xxxxxxxxxxxxxxxxxxxxxxx";
                                 }
                             }
                             if (outputHandler != null) {
-                                outputHandler.output(line);
+                                if (showServerOutput) {
+                                    outputHandler.output(line);
+                                }
                             }
                             lineStringBuffer = new StringBuffer();
                         } else {
@@ -209,7 +216,7 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
                 int exitCode = process.waitFor();
                 if (outputHandler != null) {
                     ExitCode exitCodeObject = ServerExitCodes.from(exitCode);
-                    
+
                     outputHandler.output(">> ASP Server at port " + port + " exited with code:" + exitCodeObject.toMessage());
                 }
             } catch (Exception e) {
@@ -227,6 +234,5 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
             }
         }
     }
-
 
 }

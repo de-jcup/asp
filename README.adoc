@@ -52,8 +52,9 @@ You can use ASP server either as an external process or as an embedded server.
 
 ==== As an external process
 For this case a specialized launcher was created. Just use `ExternalProcessAsciidoctorJServerLauncher` as done in 
-https://github.com/de-jcup/asp/blob/master/asp-doc/src/test/java/de/jcup/asp/example/ExternalProcessExample.java
+https://github.com/de-jcup/asp/blob/master/asp-doc/src/test/java/de/jcup/asp/example/ExternalProcessExample.java[ExternalProcessExample.java] and
+https://github.com/de-jcup/asp/blob/master/asp-doc/src/test/java/de/jcup/asp/example/ExternalProcessWithDebugOutputExample.java[ExternalProcessWithDebugOutputExample.java] 
 
 ==== As embedded server
-Same as external variant, but use `EmbeddedAsciidoctorJServerLauncher` as launcher.
+Same as external variant, but use `EmbeddedAsciidoctorJServerLauncher` as launcher. For examples look into integration tests.
   

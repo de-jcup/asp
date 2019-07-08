@@ -15,6 +15,7 @@ import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.integrationtest.AdocTestFiles;
+import de.jcup.asp.integrationtest.TestConstants;
 import de.jcup.asp.integrationtest.TestOutputHandler;
 import de.jcup.asp.integrationtest.TestServerSupport;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileService;
@@ -39,7 +40,7 @@ public class ShowCommunicationTest {
                 };
             }
         });
-        client = integrationTestServersupport.launchServerAndGetPreparedClient(4447);
+        client = integrationTestServersupport.launchServerAndGetPreparedClient(TestConstants.EMBEDDED_TESTSERVER_PORT+2);
         client.setOutputHandler(testoutputhandler);
     }
     

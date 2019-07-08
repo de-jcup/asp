@@ -18,6 +18,7 @@ import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.integrationtest.FullIntegrationTestRule;
+import de.jcup.asp.integrationtest.TestConstants;
 
 public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
@@ -33,7 +34,7 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
     @Before
     public void before() {
-        port = 4447;
+        port = TestConstants.EXTERNAL_PROCESS_PORT;
         launcherToTest = new ExternalProcessAsciidoctorJServerLauncher(fullIntegrationTestRule.getEnsuredPathToServerJar(), port);
         launcherToTest.setOutputHandler(new OutputHandler() {
 
