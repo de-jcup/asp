@@ -8,6 +8,10 @@ ASP stands for `AsciiDoctor Server Protocol` - a simple communication protocol b
 asciidoctor server instance which will do all Asciidoctor operations. So its a little bit similar to LSP 
 where the language parts are central provided by a server instance.  
 
+- Main project page: https://github.com/de-jcup/asp
+- Issue tracking done at https://github.com/de-jcup/asp/issues
+- Wiki: https://github.com/de-jcup/asp/wiki
+
 == Why a server?
 
 With https://github.com/de-jcup/eclipse-asciidoctor-editor[AsciiDoctor Editor for eclipse] it was extreme hard to handle
