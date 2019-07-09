@@ -209,7 +209,8 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
                             String line = lineStringBuffer.toString();
                             int secretPrefix = line.indexOf(CoreConstants.SERVER_SECRET_OUTPUT_PREFIX);
                             if (secretPrefix != -1) {
-                                secretKey = line.substring(secretPrefix + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX.length());
+                                secretKey = line.substring(secretPrefix + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX.length()).trim();
+                                /* why trim() at the end? Because at Windows OS we can have \r\n instead \n so we must trim to get rid of the \r...*/
                                 if (!showSecretKey) {
                                     line = line.substring(0, secretPrefix) + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX + "xxxxxxxxxxxxxxxxxxxxxxx";
                                 }
