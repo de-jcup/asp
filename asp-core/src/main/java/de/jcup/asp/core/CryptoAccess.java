@@ -37,8 +37,8 @@ public class CryptoAccess {
     }
 
     /**
-     * Create crypto object, using given base 64 encoded key
-     * @param encodedKey, bas64 encoded secret key
+     * Create <code>CryptoAccess</code> object, using given base 64 encoded key
+     * @param base64encodedSecretKey bas64 encoded secret key
      */
     public CryptoAccess(String base64encodedSecretKey) {
         byte[] decodedKey = Base64.getDecoder().decode(base64encodedSecretKey);
