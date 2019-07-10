@@ -1,7 +1,11 @@
 = ASP - Asciidoctor Server Protocol
 
-image::https://travis-ci.org/de-jcup/asp.svg?branch=master[link="https://travis-ci.org/de-jcup/asp"] 
- 
+[frame=none,grid=none,cols=2]
+|===
+a| image::https://travis-ci.org/de-jcup/asp.svg?branch=master[link="https://travis-ci.org/de-jcup/asp"]
+a| image::https://img.shields.io/lgtm/alerts/g/de-jcup/asp.svg?logo=lgtm&logoWidth=18[link="https://lgtm.com/projects/g/de-jcup/asp/alerts/"] 
+|=== 
+
 == About 
 
 ASP stands for `AsciiDoctor Server Protocol` - a simple communication protocol between a client and a 
