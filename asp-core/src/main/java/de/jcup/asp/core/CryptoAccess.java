@@ -86,7 +86,7 @@ public class CryptoAccess {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             byte[] base64ToDecrypt = Base64.getDecoder().decode(strToDecrypt);
             byte[] decryptedBytes = cipher.doFinal(base64ToDecrypt);
-            return new String(decryptedBytes);
+            return new String(decryptedBytes, "UTF-8");
         } catch (Exception e) {
             if (e instanceof BadPaddingException) {
                 /* bad key detected */
