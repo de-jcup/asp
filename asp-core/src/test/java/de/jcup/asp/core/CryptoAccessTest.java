@@ -88,5 +88,18 @@ public class CryptoAccessTest {
 
     }
     
+    @Test
+    public void decrypted_string_support_UTF8_characters() throws Exception {
+        /* prepare */
+        CryptoAccess cryptoAccess = new CryptoAccess();
+        String value = cryptoAccess.decrypt(cryptoAccess.encrypt("héllo world"));
+        
+        
+        /* test */
+        assertNotNull(value);
+        assertEquals("héllo world",value);
+
+    }
+    
 
 }
