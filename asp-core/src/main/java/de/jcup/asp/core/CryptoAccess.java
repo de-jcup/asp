@@ -15,9 +15,6 @@
  */
 package de.jcup.asp.core;
 
-import static org.apache.commons.text.StringEscapeUtils.escapeJava;
-import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
-
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -75,7 +72,7 @@ public class CryptoAccess {
         try {
             Cipher cipher = Cipher.getInstance(SECURITY_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, new SecureRandom());
-            byte[] encryptedBytes = cipher.doFinal(escapeJava(strToEncrypt).getBytes("ISO-8859-1"));
+            byte[] encryptedBytes = cipher.doFinal(strToEncrypt.getBytes("UTF-8"));
             return Base64.getEncoder().encodeToString(encryptedBytes);
             
         } catch (Exception e) {
@@ -89,7 +86,7 @@ public class CryptoAccess {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             byte[] base64ToDecrypt = Base64.getDecoder().decode(strToDecrypt);
             byte[] decryptedBytes = cipher.doFinal(base64ToDecrypt);
-            return unescapeJava(new String(decryptedBytes));
+            return new String(decryptedBytes, "UTF-8");
         } catch (Exception e) {
             if (e instanceof BadPaddingException) {
                 /* bad key detected */

@@ -92,12 +92,12 @@ public class CryptoAccessTest {
     public void decrypted_string_support_UTF8_characters() throws Exception {
         /* prepare */
         CryptoAccess cryptoAccess = new CryptoAccess();
-        String value = cryptoAccess.decrypt(cryptoAccess.encrypt("héllo world"));
+        String value = cryptoAccess.decrypt(cryptoAccess.encrypt("h\u00E9llo world"));
         
         
         /* test */
         assertNotNull(value);
-        assertEquals("héllo world",value);
+        assertEquals("h\u00E9llo world",value);
 
     }
     
