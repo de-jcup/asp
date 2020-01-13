@@ -98,7 +98,7 @@ public class CoreAspServer {
         LOG.debug("Server waiting for client call");
         try (Socket clientSocket = serverSocket.accept();
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"))) {
 
             StringBuilder sb = new StringBuilder();
             String encryptedFromClient = null;
