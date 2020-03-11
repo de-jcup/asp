@@ -17,7 +17,7 @@ allprojects{
 	}
 }
 
-def distVersion="1.1.0"
+def distVersion="1.1.1"
 
 subprojects {
 	apply plugin: 'maven'
