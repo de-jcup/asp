@@ -14,7 +14,6 @@
  *
  */
 package de.jcup.asp.server.asciidoctorj;
-import static org.asciidoctor.Asciidoctor.Factory.*;
 import static org.asciidoctor.OptionsBuilder.*;
 
 import java.awt.Desktop;
