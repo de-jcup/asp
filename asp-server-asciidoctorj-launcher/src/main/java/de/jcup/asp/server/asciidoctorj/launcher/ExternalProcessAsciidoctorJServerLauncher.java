@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.jcup.asp.core.ASPLauncher;
 import de.jcup.asp.core.CoreConstants;
 import de.jcup.asp.core.ExitCode;
@@ -39,8 +42,10 @@ import de.jcup.asp.core.ServerExitCodes;
  */
 public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ExternalProcessAsciidoctorJServerLauncher.class);
+
     private int port;
-    private String pathToJava;
+    private String pathToJavaBinary;
     private String pathToServerJar;
     private boolean showSecretKey;
 
@@ -48,13 +53,12 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
     private OutputHandler outputHandler;
     private LogHandler logHandler;
     private boolean showServerOutput;
+    
+    
+
+
 
     public ExternalProcessAsciidoctorJServerLauncher(String pathToServerJar, int port) {
-        this(null, pathToServerJar, port);
-    }
-
-    public ExternalProcessAsciidoctorJServerLauncher(String pathTojava, String pathToServerJar, int port) {
-        this.pathToJava = pathTojava;
         this.pathToServerJar = pathToServerJar;
         this.port = port;
     }
@@ -122,11 +126,15 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
         return port;
     }
 
-    public void setPathToJava(String pathToJava) {
-        if (Objects.equals(pathToJava, this.pathToJava)) {
+    /**
+     * Set full/absolute path to java binary.
+     * @param pathToJavaBinary
+     */
+    public void setPathToJavaBinary(String pathToJavaBinary) {
+        if (Objects.equals(pathToJavaBinary, this.pathToJavaBinary)) {
             return;
         }
-        this.pathToJava = pathToJava;
+        this.pathToJavaBinary = pathToJavaBinary;
     }
 
     public void setPathToServerJar(String pathToServerJar) {
@@ -169,10 +177,11 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
 
         public void run() {
             String javaCommand = null;
-            if (pathToJava == null || pathToJava.trim().isEmpty()) {
+            if (pathToJavaBinary == null || pathToJavaBinary.trim().isEmpty()) {
                 javaCommand = "java";
             } else {
-                javaCommand = pathToJava + "/java";
+                javaCommand = pathToJavaBinary;
+                
                 File test = new File(javaCommand);
                 if (!test.exists()) {
                     if (outputHandler != null) {
@@ -194,6 +203,8 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
             commands.add("-jar");
             commands.add(pathToServerJar);
 
+            LOG.debug("Start process with command:{}",commands);
+            
             ProcessBuilder pb = new ProcessBuilder(commands);
             pb.redirectErrorStream(true); // we want output and error stream handled same time
             StringBuffer lineStringBuffer = new StringBuffer();

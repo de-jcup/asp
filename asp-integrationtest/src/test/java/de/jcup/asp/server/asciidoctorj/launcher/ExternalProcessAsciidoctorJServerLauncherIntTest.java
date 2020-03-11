@@ -41,7 +41,6 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExternalProcessAsciidoctorJServerLauncherIntTest.class);
 
-
     @Rule
     public FullIntegrationTestRule fullIntegrationTestRule = new FullIntegrationTestRule();
 
@@ -51,6 +50,8 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
     public void before() {
         port = TestConstants.EXTERNAL_PROCESS_PORT;
         launcherToTest = new ExternalProcessAsciidoctorJServerLauncher(fullIntegrationTestRule.getEnsuredPathToServerJar(), port);
+        launcherToTest.setPathToJavaBinary(fullIntegrationTestRule.getPathToJavaBinaryOrNull());
+
         launcherToTest.setOutputHandler(new OutputHandler() {
 
             @Override
@@ -63,7 +64,9 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
     @After
     public void after() {
-        launcherToTest.stopServer();
+        if (launcherToTest != null) {
+            launcherToTest.stopServer();
+        }
     }
 
     @Test
@@ -79,7 +82,7 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
         String key = launcherToTest.launch(30);
         AspClient client = new AspClient(key);
         client.setPortNumber(port);
-        
+
         Path adocfile = createSimpleAdocTestFile();
         HashMap<String, Object> options = new HashMap<String, Object>();
         options.put("backend", "pdf");
@@ -100,12 +103,12 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
         };
         Thread delayedCancelByUserThread = new Thread(runnable, "Simulated (delayed) cancel by user");
         delayedCancelByUserThread.start();
-        
+
         /* execute */
         LOG.info("> start convert");
         Response response = client.convertFile(adocfile, options, monitor);
         LOG.info("> end of convert call");
-        
+
         /* test */
         assertTrue(response.failed());
         assertTrue(response.getErrorMessage().contains("canceled"));
@@ -124,6 +127,5 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
             assertEquals(expected, alive);
         }
     }
-
 
 }

@@ -27,6 +27,7 @@ import org.junit.runners.model.Statement;
 public class FullIntegrationTestRule implements TestRule {
     private static final String EXTERNAL_SERVER_TEST_ENABLED = "asp.integrationtest.full.enabled";
     private static final String PATH_TO_SERVER_JAR = "asp.integrationtest.full.pathtojar";
+    private static final String PATH_TO_JAVA_BINARY = "asp.integrationtest.full.pathtojavabinary";
 
     @Override
     public Statement apply(Statement base, Description description) {
@@ -53,6 +54,11 @@ public class FullIntegrationTestRule implements TestRule {
             next.evaluate();
         }
 
+    }
+    
+    public String getPathToJavaBinaryOrNull() {
+        String path = System.getProperty(PATH_TO_JAVA_BINARY);
+        return path;
     }
     
     public String getEnsuredPathToServerJar() {
