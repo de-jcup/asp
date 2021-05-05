@@ -11,7 +11,6 @@ allprojects{
 	repositories {
 		/* add your local maven repo - so you can deploy there */
 		mavenLocal() 
-		jcenter()
 		/* add maven central */
 		mavenCentral()
 	}
@@ -21,9 +20,11 @@ def distVersion="1.1.1"
 
 subprojects {
 	apply plugin: 'maven'
+	apply plugin: 'signing'
 	
-	group = "asp"
+	group = "de.jcup.asp"
 	version = "${distVersion}"
+//	archivesBaseName = "asp"
 	/* Continous integration part - use build number in version when 'ci.buildNumber' is set*/
 	def buildNr = System.getenv('ci.buildNumber')
   	if (buildNr != null && ! buildNr.isEmpty()){
@@ -50,47 +51,68 @@ subprojects {
      * Define artifacts
      */
     artifacts {
-        archives sourcesJar
-        archives javadocJar
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        sign configurations.archives
     }
     
-    
-	if (! projectType.bintrayDistUploads.contains(project)){
+	if (! projectType.mavenCentralDistUploads.contains(project)){
         return;
     }
     
-    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'maven-publish'
-    // https://docs.gradle.org/current/userguide/publishing_maven.html
-    // https://github.com/bintray/gradle-bintray-plugin
-    // https://reflectoring.io/guide-publishing-to-bintray-with-gradle/
-    bintray {
-        user =  System.getProperty('bintray.user')
-        key =  System.getProperty('bintray.key')
-
-        def userOrg='de-jcup'
-        
-        publications = ['bintrayDistPublication'] 
-        
-        pkg {
-            repo = 'asp'
-            name = 'distribution'
-            
-            licenses = ['Apache-2.0']
-            vcsUrl = 'https://github.com/de-jcup/asp.git'
-            
-            websiteUrl = 'https://github.com/de-jcup/asp'
-            issueTrackerUrl = 'https://github.com/de-jcup/asp/issues'
-            
-            version {
-                name = "${distVersion}"
-                released  = new Date()
-                
-                gpg {
-                    sign = true //Determines whether to GPG sign the files. The default is false
-                    passphrase = System.getProperty('mypassphrase')
-                }
+    // https://central.sonatype.org/publish/publish-gradle/
+    
+    uploadArchives {
+      repositories {
+        mavenDeployer {
+          beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    
+          repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+          }
+    
+          snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+          }
+    
+          pom.project {
+            name 'ASP'
+            packaging 'jar'
+            // optionally artifactId can be defined here
+            description 'Asciidoctor server protocol project. The project provides an '+
+                        'ASP server and also an ASP java client library to communicate. '+
+                        'The purpose of the project is to have all AsciiDoctorJ '+
+                        'dependencies inside an ASP server runining inside own JVM. So '+
+                        'client systems wanting to render asciidoc do no longer need to '+
+                        'have those dependencies. Main '
+            url 'https://github.com/de-jcup/asp'
+    
+            scm {
+              connection 'https://github.com/de-jcup/asp.git'
+              developerConnection 'https://github.com/de-jcup/asp.git'
+              url 'https://github.com/de-jcup/asp'
             }
+    
+            licenses {
+              license {
+                name 'The Apache License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+              }
+            }
+    
+            developers {
+              developer {
+                id 'de-jcup'
+                name 'Albert Tregnaghi'
+                email 'albert.tregnaghi@jcup.de'
+              }
+            }
+          }
         }
-    }
+      }
+}
+    
 }

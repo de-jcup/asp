@@ -15,7 +15,7 @@ STOP='\033[0m'
 function usage {
     echo -e "$BOLD"
     echo -e "Usage:$NC"
-    echo -e "$0 <bintray-username> <access-token> <gpg-passphrase>"
+    echo -e "$0 <ossrhUsername> <ossrhPassword> <gpg<gpg-secretKeyRingfile> <gpg-passphrase>"
 }
 
 if [ $# -lt 3 ]; then
@@ -23,4 +23,4 @@ if [ $# -lt 3 ]; then
     exit 1
 fi
 #./gradlew buildDist 
-./gradlew clean bintrayUpload -Dbintray.user=$username -Dbintray.key=$bintraykey -Dmypassphrase=$passphrase
+./gradlew clean buildDist uploadArchives

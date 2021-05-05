@@ -16,7 +16,7 @@ buildscript {
 ext {
 projectType = [
 
-                bintrayDistUploads: [
+                mavenCentralDistUploads: [
                         project(':asp-server-asciidoctorj'),
                         project(':asp-server-asciidoctorj-launcher')
                 ]
