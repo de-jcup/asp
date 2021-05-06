@@ -6,9 +6,10 @@
  */
 dependencies {
 
-	compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.2.0'
-    compile group: 'org.asciidoctor', name: 'asciidoctorj-pdf', version: '1.5.3'
-    compile group: 'org.asciidoctor', name: 'asciidoctorj-diagram', version: '2.0.1'
+    // https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj
+	compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.5.1'
+    compile group: 'org.asciidoctor', name: 'asciidoctorj-pdf', version: '1.5.4'
+    compile group: 'org.asciidoctor', name: 'asciidoctorj-diagram', version: '2.1.2'
     compile project(':asp-server-core')
     
     // https://mvnrepository.com/artifact/org.mockito/mockito-all
