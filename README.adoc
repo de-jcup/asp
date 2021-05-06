@@ -2,7 +2,7 @@
 
 [frame=none,grid=none,cols=2]
 |===
-a| image::https://travis-ci.org/de-jcup/asp.svg?branch=master[link="https://travis-ci.org/de-jcup/asp"]
+a| image::https://github.com/de-jcup/asp/actions/workflows/gradle.yml/badge.svg[Java CI with Gradle,link=https://github.com/de-jcup/asp/actions/workflows/gradle.yml]
 a| image::https://img.shields.io/lgtm/alerts/g/de-jcup/asp.svg?logo=lgtm&logoWidth=18[link="https://lgtm.com/projects/g/de-jcup/asp/alerts/"] 
 |=== 
 
