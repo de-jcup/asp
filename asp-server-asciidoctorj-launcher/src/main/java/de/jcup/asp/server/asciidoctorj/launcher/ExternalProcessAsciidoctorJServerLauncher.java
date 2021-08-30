@@ -21,7 +21,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,14 +55,12 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
     private OutputHandler outputHandler;
     private LogHandler logHandler;
     private boolean showServerOutput;
-    
-    
-
-
+    private Map<String, String> customEnvironmentEntries;
 
     public ExternalProcessAsciidoctorJServerLauncher(String pathToServerJar, int port) {
         this.pathToServerJar = pathToServerJar;
         this.port = port;
+        this.customEnvironmentEntries = new TreeMap<String, String>();// use tree map to have it always sorted... easier to debug
     }
 
     public void setShowSecretKey(boolean showSecretKey) {
@@ -69,6 +69,18 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
 
     public void setShowServerOutput(boolean showServerOutput) {
         this.showServerOutput = showServerOutput;
+    }
+
+    /**
+     * Set custom environment entry used inside process. For example we can define here a GRAPHVIZ_DOT environment entry
+     * to have a custom setup for graphviz installation
+     * @param key
+     * @param value
+     */
+    public void setEnvironment(String key, String value) {
+        Objects.requireNonNull(key,"Key may not be null - not acceptable.");
+        
+        customEnvironmentEntries.put(key, value);
     }
 
     /**
@@ -128,6 +140,7 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
 
     /**
      * Set full/absolute path to java binary.
+     * 
      * @param pathToJavaBinary
      */
     public void setPathToJavaBinary(String pathToJavaBinary) {
@@ -181,7 +194,7 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
                 javaCommand = "java";
             } else {
                 javaCommand = pathToJavaBinary;
-                
+
                 File test = new File(javaCommand);
                 if (!test.exists()) {
                     if (outputHandler != null) {
@@ -203,10 +216,14 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
             commands.add("-jar");
             commands.add(pathToServerJar);
 
-            LOG.debug("Start process with command:{}",commands);
-            
+            LOG.debug("Start process with command:{}", commands);
+
             ProcessBuilder pb = new ProcessBuilder(commands);
             pb.redirectErrorStream(true); // we want output and error stream handled same time
+            
+            Map<String, String> environment = pb.environment();
+            environment.putAll(customEnvironmentEntries); // add custom environment entries
+            
             StringBuffer lineStringBuffer = new StringBuffer();
             try {
                 process = pb.start();
@@ -221,7 +238,10 @@ public class ExternalProcessAsciidoctorJServerLauncher implements ASPLauncher {
                             int secretPrefix = line.indexOf(CoreConstants.SERVER_SECRET_OUTPUT_PREFIX);
                             if (secretPrefix != -1) {
                                 secretKey = line.substring(secretPrefix + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX.length()).trim();
-                                /* why trim() at the end? Because at Windows OS we can have \r\n instead \n so we must trim to get rid of the \r...*/
+                                /*
+                                 * why trim() at the end? Because at Windows OS we can have \r\n instead \n so
+                                 * we must trim to get rid of the \r...
+                                 */
                                 if (!showSecretKey) {
                                     line = line.substring(0, secretPrefix) + CoreConstants.SERVER_SECRET_OUTPUT_PREFIX + "xxxxxxxxxxxxxxxxxxxxxxx";
                                 }
