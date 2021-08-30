@@ -1,6 +1,6 @@
 dependencies {
-    implementation project(':asp-core')
-    implementation project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
+    api project(':asp-core')
+    api project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
 }
 
 task buildDist(type: Jar) {
@@ -13,7 +13,7 @@ task buildDist(type: Jar) {
         attributes 'Launcher-Version': "${version}"
     }
     baseName = "${project.name}"
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 

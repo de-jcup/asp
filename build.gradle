@@ -13,6 +13,11 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
     }
 }
+
+plugins {
+    id 'java-library'
+}
+
 ext {
 projectType = [
 

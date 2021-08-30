@@ -1,5 +1,8 @@
 dependencies {
    
+    implementation project(':asp-core')
+    implementation project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
+   
     testImplementation project(':asp-server-asciidoctorj-launcher')
 
 }
