@@ -10,15 +10,28 @@
  */
 ext {
 
+    asciidoctorj_version = "2.5.2"
+
 	library = [
 		/* testing */		
 		junit:							"junit:junit:4.12",
-		mockito_all:					"org.mockito:mockito-all:1.8.5",
+		mockito_all:					"org.mockito:mockito-all:1.10.19",
 		
 		/* logging */
 		slf4j_api:						"org.slf4j:slf4j-api:1.7.10",
 		slf4j_jdk:						"org.slf4j:slf4j-jdk14:1.7.10",
-				
+		
+		asciidoctorj_api:               "org.asciidoctor:asciidoctorj-api:${asciidoctorj_version}",
+		
+		// https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj
+		asciidoctorj_impl:              "org.asciidoctor:asciidoctorj:${asciidoctorj_version}",
+		
+		// https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-diagram
+		asciidoctorj_diagram:           "org.asciidoctor:asciidoctorj-diagram:2.2.0",
+		
+		// https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-pdf
+		asciidoctorj_pdf:               "org.asciidoctor:asciidoctorj-pdf:1.6.0"
+		
 		
 	]
 	

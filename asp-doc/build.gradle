@@ -1,4 +1,6 @@
 dependencies {
-    testCompile project(':asp-server-asciidoctorj-launcher')
+   
+    testImplementation project(':asp-server-asciidoctorj-launcher')
+
 }
 

@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':asp-core')
+    implementation project(':asp-core')
 }
 
 task buildDist(type: Jar) {

@@ -1,3 +1,5 @@
 dependencies {
-   compile group: 'org.asciidoctor', name: 'asciidoctorj-api', version: '2.0.0'
+
+   implementation library.asciidoctorj_api
+
 }

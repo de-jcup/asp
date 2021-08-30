@@ -1,6 +1,6 @@
 dependencies {
-    compile project(':asp-core')
-    compile project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
+    implementation project(':asp-core')
+    implementation project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
 }
 
 task buildDist(type: Jar) {
