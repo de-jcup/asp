@@ -1,10 +1,7 @@
 #!/bin/bash 
 
-username=$1
-bintraykey=$2
-passphrase=$3
 
-RED='\033[0;31m'
+RED='\033[31m'
 WHITE='\033[97m'
 NC='\033[0m'
 BOLD='\033[1m'
@@ -15,12 +12,34 @@ STOP='\033[0m'
 function usage {
     echo -e "$BOLD"
     echo -e "Usage:$NC"
-    echo -e "$0 <bintray-username> <access-token> <gpg-passphrase>"
+    echo -e "$0 <signing-password>"
+    echo -e "${GREEN}Necessary Gradle properties:$NC e.g. from ~/.gradle/gradle.properties or ORG_GRADLE_PROJECT_* properties"
+    echo -e "${RED}signing.keyId$NC=12345678"
+    echo -e "${RED}signing.secretKeyRingFile$NC=~/.gnupg/secring.gpg"
+    echo ""
+    echo -e "${GREEN}Necessary Environment entries:$NC"
+    echo -e "${RED}OSSRH_USERNAME$NC:sonatype user name"
+    echo -e "${RED}OSSRH_PASSWORD$NC:sonatype password or token"
+   
 }
 
-if [ $# -lt 3 ]; then
+# check environment set
+if [ -z "$OSSRH_USERNAME" ]; then
+    echo -e "Please export ${RED}OSSRH_USERNAME${NC}"
     usage
-    exit 1
+    exit 1;
 fi
-#./gradlew buildDist 
-./gradlew clean bintrayUpload -Dbintray.user=$username -Dbintray.key=$bintraykey -Dmypassphrase=$passphrase
+
+if [ -z "$OSSRH_PASSWORD" ]; then
+    echo -e "Please export ${RED}OSSRH_PASSWORD${NC}"
+    usage
+    exit 1;
+fi
+
+if [ -z "$1" ]; then
+    echo -e "Please define the signing password as parameter"
+    usage
+    exit 1;
+fi
+
+./gradlew clean build buildDist uploadArchives -Psigning.password=$SIGNING_PASSWORD
