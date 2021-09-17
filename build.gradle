@@ -7,21 +7,20 @@
  */
 buildscript {
     repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+        mavenCentral()
     }
 }
 
 plugins {
+    id 'java'
     id 'java-library'
+    id 'signing'
 }
 
 ext {
 projectType = [
 
-                bintrayDistUploads: [
+                mavenCentralDistUploads: [
                         project(':asp-server-asciidoctorj'),
                         project(':asp-server-asciidoctorj-launcher')
                 ]
