@@ -8,48 +8,34 @@
  */
  
 def ossrhPassword = System.getenv('OSSRH_PASSWORD')
-if (ossrhPassword==null){
-    throw new IllegalArgumentException("OSSRH_PASSWORD not set")
-}
-
 def ossrhUsername = System.getenv('OSSRH_USERNAME')
-if (ossrhUsername==null){
-    throw new IllegalArgumentException("OSSRH_USERNAME not set")
-} 
- 
  
 allprojects{
-	/* define repositories*/
-	repositories {
-		/* add your local maven repo - so you can deploy there */
-		mavenLocal() 
-		/* add maven central */
-		mavenCentral()
-		/* add sonatype as well */
-//		maven {
-//		  url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-//		  credentials{
-//		      username "$ossrhUsername"
-//		      password "$ossrhPassword"
-//		  }
-//		}
-	}
+    /* define repositories*/
+    repositories {
+        /* add your local maven repo - so you can deploy there */
+        mavenLocal() 
+        /* add maven central */
+        mavenCentral()
+    }
 }
 
 def distVersion="1.3.0"
 
+def signingActivated = hasProperty('signing.password')
+
 subprojects {
-	apply plugin: 'maven'
-	apply plugin: 'signing'
-	apply plugin: 'maven-publish'
-	
-	group = "de.jcup"
-	version = "${distVersion}"
-	/* Continous integration part - use build number in version when 'ci.buildNumber' is set*/
-	def buildNr = System.getenv('ci.buildNumber')
-  	if (buildNr != null && ! buildNr.isEmpty()){
-		version= version + "_"+buildNr
-	}
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+    apply plugin: 'maven-publish'
+    
+    group = "de.jcup"
+    version = "${distVersion}"
+    /* Continous integration part - use build number in version when 'ci.buildNumber' is set*/
+    def buildNr = System.getenv('ci.buildNumber')
+    if (buildNr != null && ! buildNr.isEmpty()){
+        version= version + "_"+buildNr
+    }
 
     
     /**
@@ -76,18 +62,20 @@ subprojects {
         archives javadocJar
     }
     
-    signing {
-        sign configurations.archives
+    if (signingActivated) {
+        signing {
+            sign configurations.archives
+        }
     }
     
-    
-	if (! projectType.mavenCentralDistUploads.contains(project)){
+    if (! projectType.mavenCentralDistUploads.contains(project)){
         return;
     }
 
     apply plugin: 'maven-publish'
 
     uploadArchives {
+    
           repositories {
             mavenDeployer {
              
@@ -134,5 +122,22 @@ subprojects {
         }
     
     
+    task checkCredentialsSet{
+        doFirst {
+            if (ossrhPassword==null){
+                throw new IllegalArgumentException("OSSRH_PASSWORD not set")
+            }
+            
+            if (ossrhUsername==null){
+                throw new IllegalArgumentException("OSSRH_USERNAME not set")
+            } 
+            
+            if (! signingActivated) {
+                throw new IllegalArgumentException("signing.password property not set, but necessary!")
+            }
+        }
+
+    }
     
+    tasks.uploadArchives.dependsOn("checkCredentialsSet")   
 }
