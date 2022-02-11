@@ -10,7 +10,14 @@
  */
 ext {
 
-    asciidoctorj_version = "2.5.2"
+	// https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj
+    asciidoctorj_version = "2.5.3"
+    
+    // https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-pdf
+    asciidoctorj_pdf_version = "1.6.2"
+    
+    // https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-pdf
+    asciidoctorj_diagram_version = "2.2.1"
 
 	library = [
 		/* testing */		
@@ -27,10 +34,10 @@ ext {
 		asciidoctorj_impl:              "org.asciidoctor:asciidoctorj:${asciidoctorj_version}",
 		
 		// https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-diagram
-		asciidoctorj_diagram:           "org.asciidoctor:asciidoctorj-diagram:2.2.0",
+		asciidoctorj_diagram:           "org.asciidoctor:asciidoctorj-diagram:${asciidoctorj_diagram_version}",
 		
 		// https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-pdf
-		asciidoctorj_pdf:               "org.asciidoctor:asciidoctorj-pdf:1.6.0"
+		asciidoctorj_pdf:               "org.asciidoctor:asciidoctorj-pdf:${asciidoctorj_pdf_version}"
 		
 		
 	]
