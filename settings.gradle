@@ -7,5 +7,5 @@ include 'asp-api',
 'asp-server-asciidoctorj-launcher',
 'asp-client-java',
 'asp-integrationtest',
-'asp-plaground'
+'asp-playground'
 		
