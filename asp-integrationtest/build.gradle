@@ -2,6 +2,8 @@ dependencies {
     implementation project(':asp-client-java')
     implementation project(':asp-server-asciidoctorj')
     implementation project(':asp-server-asciidoctorj-launcher')
+    
+    implementation 'junit:junit:4.12'
 }
 
 /**

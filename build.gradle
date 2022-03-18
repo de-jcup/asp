@@ -20,11 +20,11 @@ plugins {
 ext {
 projectType = [
 
-                mavenCentralDistUploads: [
-                        project(':asp-server-asciidoctorj'),
-                        project(':asp-server-asciidoctorj-launcher')
-                ]
-            ]
+        mavenCentralDistUploads: [
+                project(':asp-server-asciidoctorj'),
+                project(':asp-server-asciidoctorj-launcher')
+        ]
+    ]
 }
 
 allprojects{

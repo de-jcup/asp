@@ -11,14 +11,14 @@ subprojects {
     apply plugin: 'java-library'
 	
 	dependencies{
-	    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+	    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 	    // https://mvnrepository.com/artifact/ch.qos.logback/logback-core
-        compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
-        compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
        // https://mvnrepository.com/artifact/com.eclipsesource.minimal-json/minimal-json
-        compile group: 'com.eclipsesource.minimal-json', name: 'minimal-json', version: '0.9.5'
+        implementation group: 'com.eclipsesource.minimal-json', name: 'minimal-json', version: '0.9.5'
 
-        testCompile 'junit:junit:4.12'
+        testImplementation 'junit:junit:4.12'
 	}
 		
 	/* Setup UTF-8 for compile AND test compilation*/
