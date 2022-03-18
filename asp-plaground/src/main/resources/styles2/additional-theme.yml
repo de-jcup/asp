@@ -1,0 +1,4 @@
+## From : https://github.com/asciidoctor/asciidoctor-pdf/blob/v1.6.0/docs/theming-guide.adoc#basic-theme
+extends: default
+base:
+  font-color: #ff0000
