@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.BindException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +29,8 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.jcup.asp.api.Response;
+import de.jcup.asp.api.asciidoc.Attributes;
+import de.jcup.asp.api.asciidoc.Options;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.LaunchException;
@@ -93,10 +94,11 @@ public class EmbeddedAsciidoctorJServerLauncherIntTest {
         AspClient client = launchServerAndGetPreparedClient();
 
         Path adocfile = createSimpleAdocTestFile("To check html works...");
-        HashMap<String, Object> options = new HashMap<String, Object>();
+        Options options = Options.builder().backend("html").build();
+        Attributes attributes = Attributes.builder().build();
 
         /* execute */
-        Response response = client.convertFile(adocfile, options, null);
+        Response response = client.convertFile(adocfile, options, attributes, null);
 
         /* test */
         assertFalse(response.failed());
@@ -113,11 +115,12 @@ public class EmbeddedAsciidoctorJServerLauncherIntTest {
         AspClient client = launchServerAndGetPreparedClient();
 
         Path adocfile = createSimpleAdocTestFile("To check pdf works...");
-        HashMap<String, Object> options = new HashMap<String, Object>();
-        options.put("backend", "pdf");
+        
+        Options options = Options.builder().backend("pdf").build();
+        Attributes attributes = Attributes.builder().build();
 
         /* execute */
-        Response response = client.convertFile(adocfile, options, null);
+        Response response = client.convertFile(adocfile, options, attributes, null);
 
         /* test */
         assertFalse(response.failed());

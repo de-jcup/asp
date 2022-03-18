@@ -18,7 +18,6 @@ package de.jcup.asp.server.asciidoctorj;
 import static org.junit.Assert.*;
 
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
@@ -28,6 +27,7 @@ import org.junit.Test;
 import de.jcup.asp.api.Commands;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
+import de.jcup.asp.api.asciidoc.Options;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.integrationtest.AdocTestFiles;
 import de.jcup.asp.integrationtest.TestConstants;
@@ -67,11 +67,14 @@ public class ShowCommunicationTest {
     @Test
     public void show_communication_enabled__communication_output_sent_to_outputhandler() throws Exception {
         /* prepare */
+        
+        Options options = Options.builder().customOption("mykey1","myvalue1").build();
+        
         Path path = AdocTestFiles.createSimpleAdocTestFile();
         client.setShowCommunication(true);
         
         /* execute + test */
-        client.convertFile(path,Collections.singletonMap("mykey1","myvalue1"),null);
+        client.convertFile(path,options,null,null);
         
         /* test */
         List<String> messages = testoutputhandler.getMessages();
@@ -92,9 +95,10 @@ public class ShowCommunicationTest {
     public void default_communication_output_sent_to_outputhandler() throws Exception {
         /* prepare */
         Path path = AdocTestFiles.createSimpleAdocTestFile();
+        Options options = Options.builder().customOption("mykey1","myvalue1").build();
         
         /* execute + test */
-        client.convertFile(path,Collections.singletonMap("mykey1","myvalue1"),null);
+        client.convertFile(path,options,null,null);
         
         /* test */
         List<String> messages = testoutputhandler.getMessages();

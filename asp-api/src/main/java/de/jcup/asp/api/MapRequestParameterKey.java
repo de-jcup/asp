@@ -22,9 +22,11 @@ import java.util.TreeMap;
 public enum MapRequestParameterKey implements RequestParameterKey<Map<String,Object>> {
      
      /**
-      * Path to a FOLDER where server shall do an action 
+      * Asciidoctor options 
       */
      OPTIONS,
+     
+     ATTRIBUTES,
 
      ;
     private String id;

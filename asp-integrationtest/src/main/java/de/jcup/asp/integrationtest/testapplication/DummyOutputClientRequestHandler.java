@@ -13,7 +13,7 @@
  * and limitations under the License.
  *
  */
-package de.jcup.asp.server;
+package de.jcup.asp.integrationtest.testapplication;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

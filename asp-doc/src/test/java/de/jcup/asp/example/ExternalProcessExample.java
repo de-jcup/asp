@@ -20,10 +20,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 import de.jcup.asp.api.Response;
+import de.jcup.asp.api.asciidoc.Attributes;
+import de.jcup.asp.api.asciidoc.Options;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.server.asciidoctorj.launcher.ExternalProcessAsciidoctorJServerLauncher;
 
@@ -45,11 +45,11 @@ public class ExternalProcessExample {
             client.setPortNumber(4449);
             
             /* now convert Asciidoc to HTML by ASP client */
-            Map<String, Object> options = new HashMap<String, Object>();
-            options.put("backend", "html");// <4>
+            Options options = Options.builder().backend("html").build();
+            Attributes attributes = Attributes.builder().build();
             
             /* get the result and show it inside browser:*/
-            Response response = client.convertFile(adocfile, options, null);// <5>
+            Response response = client.convertFile(adocfile, options, attributes, null);// <5>
             Path resultFile = response.getResultFilePath();
             
             Desktop.getDesktop().open(resultFile.toFile());

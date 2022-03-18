@@ -19,7 +19,6 @@ import static de.jcup.asp.integrationtest.AdocTestFiles.*;
 import static org.junit.Assert.*;
 
 import java.nio.file.Path;
-import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jcup.asp.api.Response;
+import de.jcup.asp.api.asciidoc.Attributes;
+import de.jcup.asp.api.asciidoc.Options;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.integrationtest.FakeRequestHandler;
@@ -87,8 +88,6 @@ public class CancelOperationTest {
     }
     
     private void callPdfConvertAndAssertTime(AspClient client, boolean autoCancel,TimeAssertData timeset) throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>();
-        options.put("backend", "pdf");
         DefaultAspClientProgressMonitor monitor = new DefaultAspClientProgressMonitor();
         if (autoCancel) {
             Runnable runnable = new Runnable() {
@@ -109,12 +108,15 @@ public class CancelOperationTest {
             delayedCancelByUserThread.start();
             
         }
+        Options options = Options.builder().backend("html").build();
+        Attributes attributes = Attributes.builder().build();
+        
         /* execute */
         LOG.info("> start convert");
         long start = System.currentTimeMillis();
         
         Path adocfile = createSimpleAdocTestFile("...");
-        Response response = client.convertFile(adocfile, options, monitor);
+        Response response = client.convertFile(adocfile, options, attributes, monitor);
         long end = System.currentTimeMillis();
         LOG.info("> end of convert call");
         LOG.info("Response:"+response.convertToString());

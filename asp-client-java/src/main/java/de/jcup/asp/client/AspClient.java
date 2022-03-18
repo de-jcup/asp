@@ -17,7 +17,6 @@ package de.jcup.asp.client;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -29,6 +28,8 @@ import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
+import de.jcup.asp.api.asciidoc.Attributes;
+import de.jcup.asp.api.asciidoc.Options;
 import de.jcup.asp.core.Constants;
 import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.LogHandler;
@@ -88,13 +89,20 @@ public class AspClient {
         return portNumber;
     }
 
-    public Response convertFile(Path adocfile, Map<String, Object> options, AspClientProgressMonitor monitor ) throws AspClientException {
+    public Response convertFile(Path adocfile, Options options, Attributes attributes, AspClientProgressMonitor monitor ) throws AspClientException {
         Request request = createRequest();
+        if (options==null) {
+            options = Options.builder().build();
+        }
+        if (attributes==null) {
+            attributes = Attributes.builder().build();
+        }
 
         request.set(StringRequestParameterKey.COMMAND, Commands.CONVERT_FILE);
 
         request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
-        request.set(MapRequestParameterKey.OPTIONS, options);
+        request.set(MapRequestParameterKey.OPTIONS, options.toMap());
+        request.set(MapRequestParameterKey.ATTRIBUTES, attributes.toMap());
 
         return callServer(request,monitor);
 

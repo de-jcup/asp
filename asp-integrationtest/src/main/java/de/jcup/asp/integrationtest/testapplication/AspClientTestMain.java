@@ -13,18 +13,19 @@
  * and limitations under the License.
  *
  */
-package de.jcup.asp.client;
+package de.jcup.asp.integrationtest.testapplication;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.ServerLog;
 import de.jcup.asp.api.ServerLogEntry;
+import de.jcup.asp.api.asciidoc.Attributes;
+import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.client.AspClient;
 
 public class AspClientTestMain {
 
@@ -34,10 +35,10 @@ public class AspClientTestMain {
         String dateStr = SimpleDateFormat.getDateTimeInstance().format(new Date());
         Files.newBufferedWriter(adocfile).append("== Interests in asciidoc\nsomething important...\n\ninclude::not-existing.adoc[]\n\nTIP: Do not write word, but asciidoc ;-)\n\nNOTE: its now:"+dateStr).close();
         
-        Map<String, Object> options = new HashMap<>();
-        options.put("backend","pdf");
+        Options options = Options.builder().backend("pdf").build();
+        Attributes attributes = Attributes.builder().build();
         
-        Response response = new AspClient(serverSecretkey).convertFile(adocfile, options,null);
+        Response response = new AspClient(serverSecretkey).convertFile(adocfile, options, attributes, null);
         Path path = response.getResultFilePath();
         
         System.out.println("got: result path:"+path);
