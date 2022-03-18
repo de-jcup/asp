@@ -31,6 +31,7 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
+import de.jcup.asp.core.LaunchException;
 import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.integrationtest.FullIntegrationTestRule;
 import de.jcup.asp.integrationtest.TestConstants;
@@ -49,6 +50,10 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
     @Before
     public void before() {
         port = TestConstants.EXTERNAL_PROCESS_PORT;
+        initLauncher();
+    }
+
+    private void initLauncher() {
         launcherToTest = new ExternalProcessAsciidoctorJServerLauncher(fullIntegrationTestRule.getEnsuredPathToServerJar(), port);
         launcherToTest.setPathToJavaBinary(fullIntegrationTestRule.getPathToJavaBinaryOrNull());
 
@@ -70,8 +75,35 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
     }
 
     @Test
-    public void server_launch_by_jar() throws Exception {
+    public void started_server_cannot_start_on_same_port_without_stop_but_after_stop_restart_with_same_port_possible() throws Exception {
+        /* prepare -start server */
+        ExternalProcessAsciidoctorJServerLauncher initialLauncher = launcherToTest;
+        initialLauncher.launch(10);
 
+        /*
+         * test precondition - without stop, new server cannot be launched with same
+         * port
+         */
+        initLauncher(); // create new launcher for same port as before
+        try {
+            launcherToTest.launch(10);
+            fail("should not be be able to launch when old server is not started");
+        } catch (LaunchException e) {
+            assertTrue(e.getMessage().contains("secret"));
+        }
+
+        /* execute */
+        boolean successFullStopped = initialLauncher.stopServer();
+        assertTrue(successFullStopped);
+
+        /* test */
+        initLauncher(); // create new launcher for same port as before
+        String newKey = launcherToTest.launch(10); // start again with same port
+        assertNotNull(newKey);
+    }
+
+    @Test
+    public void server_launch_by_jar() throws Exception {
         String key = launcherToTest.launch(30);
         callServerAliveMultipleTimes(key, port);
     }
@@ -85,7 +117,7 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
         Path adocfile = createSimpleAdocTestFile();
         AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("pdf").build();
-        
+
         DefaultAspClientProgressMonitor monitor = new DefaultAspClientProgressMonitor();
         Runnable runnable = new Runnable() {
 
@@ -94,7 +126,7 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
                 try {
                     Thread.sleep(500);
                     monitor.setCanceled(true);
-                    LOG.info(">> canceld by user!");
+                    LOG.info(">> canceled by user!");
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

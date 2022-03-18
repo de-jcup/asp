@@ -11,6 +11,6 @@ task buildDist(type: Jar) {
         attributes 'AspClient-Version': "${version}"
     }
     baseName = 'asp-client-dist'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

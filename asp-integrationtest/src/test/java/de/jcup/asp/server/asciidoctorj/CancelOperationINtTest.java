@@ -55,7 +55,7 @@ public class CancelOperationINtTest {
     }
     
     @Test
-    public void long_run_action_canceld() throws Exception {
+    public void long_run_action_canceled() throws Exception {
         /* prepare */
         fakeRequestHandler.allRequestsNeedsOnServerSide(10000);
         
@@ -65,7 +65,7 @@ public class CancelOperationINtTest {
     
     
     @Test
-    public void long_two_actions_last_canceld() throws Exception {
+    public void long_two_actions_last_canceled() throws Exception {
         /* prepare */
         fakeRequestHandler.allRequestsNeedsOnServerSide(2000);
         
@@ -76,7 +76,7 @@ public class CancelOperationINtTest {
     }
     
     @Test
-    public void test_10_actions_all_canceld() throws Exception {
+    public void test_10_actions_all_canceled() throws Exception {
         /* prepare */
         fakeRequestHandler.allRequestsNeedsOnServerSide(8000);
         

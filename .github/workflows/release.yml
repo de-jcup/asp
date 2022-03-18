@@ -40,7 +40,33 @@ jobs:
 
     - name: Build with Gradle
       run: mvn -B package --file pom.xml
+      
+    # We use 'if: always()' to run a step even if a previous step failed
+    - name: Create combined test report
+      if: always()
+      run: ./gradlew createCombinedTestReport
+      
+    # -----------------------------------------
+    # Upload Build Artifacts
+    # -----------------------------------------
+    - name: Archive combined test report
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: combined-asp-testreport
+        path: build/reports/combined-report
+        retention-days: 14
+    - name: Archive distribution jar
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: asp-distribution
+        path: asp-server-asciidoctorj/build/libs
+        retention-days: 14
 
+    # -----------------------------------------
+    # Start maven central deployment
+    # -----------------------------------------
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v1
       with: # running setup-java again overwrites the settings.xml
