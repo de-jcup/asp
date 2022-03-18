@@ -35,7 +35,7 @@ import de.jcup.asp.client.AspClient;
 import de.jcup.asp.integrationtest.TestConstants;
 import de.jcup.asp.integrationtest.TestFileReader;
 
-public class ConvertToFileTest {
+public class ConvertToFileIntTest {
 
     private static int port;
     private static EmbeddedAsciidoctorJServerLauncher launcherUsedForTesting;

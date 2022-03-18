@@ -34,7 +34,7 @@ import de.jcup.asp.integrationtest.TestConstants;
 import de.jcup.asp.integrationtest.TestOutputHandler;
 import de.jcup.asp.integrationtest.TestServerSupport;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileService;
-public class ShowCommunicationTest {
+public class ShowCommunicationIntTest {
 
     private TestServerSupport integrationTestServersupport;
     private AspClient client;

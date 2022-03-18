@@ -35,9 +35,9 @@ import de.jcup.asp.integrationtest.FakeRequestHandler;
 import de.jcup.asp.integrationtest.TestConstants;
 import de.jcup.asp.integrationtest.TestServerSupport;
 import de.jcup.asp.integrationtest.TimeAssertData;
-public class CancelOperationTest {
+public class CancelOperationINtTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CancelOperationTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CancelOperationINtTest.class);
     private FakeRequestHandler fakeRequestHandler;
     private TestServerSupport integrationTestServersupport;
     private AspClient client;
