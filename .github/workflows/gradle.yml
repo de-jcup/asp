@@ -22,11 +22,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Build distribution
-      run: ./gradlew build buildDist
-      
-    - name: Test without integration tests
-      run: ./gradlew test -x :asp-integrationtest:test
+    - name: Build all + test but without integration tests
+      run: ./gradlew build buildDist -x :asp-integrationtest:test
       
     - name: Start full integration test
       run: ./gradlew :asp-integrationtest:fullintegrationtest
