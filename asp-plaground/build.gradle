@@ -1,0 +1,9 @@
+dependencies {
+
+    implementation project(':asp-client-java')
+    implementation project(':asp-server-asciidoctorj')
+
+    implementation library.asciidoctorj_api
+    implementation library.asciidoctorj_impl
+}
+

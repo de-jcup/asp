@@ -4,6 +4,8 @@ dependencies {
     implementation project(':asp-server-asciidoctorj-launcher')
     
     implementation 'junit:junit:4.12'
+    implementation library.asciidoctorj_api
+    implementation library.asciidoctorj_impl
 }
 
 /**

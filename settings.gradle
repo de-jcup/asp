@@ -6,5 +6,6 @@ include 'asp-api',
 'asp-server-asciidoctorj',
 'asp-server-asciidoctorj-launcher',
 'asp-client-java',
-'asp-integrationtest'
+'asp-integrationtest',
+'asp-plaground'
 		
