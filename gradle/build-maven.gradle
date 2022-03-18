@@ -29,7 +29,6 @@ allprojects{
 subprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
-    apply plugin: 'maven-publish'
     
     group = "de.jcup.asp"
     version = "${distVersion}"
@@ -69,6 +68,15 @@ subprojects {
 //    }
 
     apply plugin: 'maven-publish'
+    
+    // the GAV of the generated POM can be set here
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+    }
 
     uploadArchives {
     
