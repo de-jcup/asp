@@ -78,10 +78,18 @@ public class JunitFilesToOneFileConverter {
 ///apply from '${rootProject.projectDir}/gradle/JunitFilesToOneFileConverter.groovy'
 
 subprojects{
-
+    
+    def copyFrom = "${project.projectDir}/build/test-results"
+    
+    if (project.name.equals("asp-integrationtest")){
+        copyFrom = "${copyFrom}/fullintegrationtest"
+    }else{
+        copyFrom = "${copyFrom}/test"
+    }
+    
     task copyTestResults(type: Copy) {
         with{
-            from "${project.projectDir}/build/test-results/test"
+            from "${copyFrom}"
             into "${combined_report_junit_tmp}"
             include "*.xml"
         }
