@@ -22,8 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import de.jcup.asp.api.Response;
-import de.jcup.asp.api.asciidoc.Attributes;
-import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.api.asciidoc.AsciidocAttributes;
+import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.core.OutputHandler;
 import de.jcup.asp.server.asciidoctorj.launcher.ExternalProcessAsciidoctorJServerLauncher;
@@ -63,11 +63,11 @@ public class ExternalProcessWithDebugOutputExample {
             client.setShowCommunication(true);
             
             /* now convert Asciidoc to HTML by ASP client */
-            Options options = Options.builder().backend("html").build();
-            Attributes attributes = Attributes.builder().build();
+            AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("html").build();
+            AsciidocAttributes asciidocAttributes = AsciidocAttributes.builder().build();
             
             /* get the result and show it inside browser:*/
-            Response response = client.convertFile(adocfile, options, attributes, null);// <5>
+            Response response = client.convertFile(adocfile, asciidocOptions, asciidocAttributes, null);// <5>
             Path resultFile = response.getResultFilePath();
             
             Desktop.getDesktop().open(resultFile.toFile());

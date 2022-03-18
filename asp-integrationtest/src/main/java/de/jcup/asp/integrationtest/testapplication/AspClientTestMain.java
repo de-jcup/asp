@@ -23,8 +23,8 @@ import java.util.Date;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.ServerLog;
 import de.jcup.asp.api.ServerLogEntry;
-import de.jcup.asp.api.asciidoc.Attributes;
-import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.api.asciidoc.AsciidocAttributes;
+import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.client.AspClient;
 
 public class AspClientTestMain {
@@ -35,10 +35,10 @@ public class AspClientTestMain {
         String dateStr = SimpleDateFormat.getDateTimeInstance().format(new Date());
         Files.newBufferedWriter(adocfile).append("== Interests in asciidoc\nsomething important...\n\ninclude::not-existing.adoc[]\n\nTIP: Do not write word, but asciidoc ;-)\n\nNOTE: its now:"+dateStr).close();
         
-        Options options = Options.builder().backend("pdf").build();
-        Attributes attributes = Attributes.builder().build();
+        AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("pdf").build();
+        AsciidocAttributes asciidocAttributes = AsciidocAttributes.builder().build();
         
-        Response response = new AspClient(serverSecretkey).convertFile(adocfile, options, attributes, null);
+        Response response = new AspClient(serverSecretkey).convertFile(adocfile, asciidocOptions, asciidocAttributes, null);
         Path path = response.getResultFilePath();
         
         System.out.println("got: result path:"+path);

@@ -1,5 +1,5 @@
 package de.jcup.asp.api.asciidoc;
-public enum CompatMode {
+public enum AsciidocCompatMode {
 
     DEFAULT("default"),
     
@@ -7,7 +7,7 @@ public enum CompatMode {
     
     private String mode;
     
-    private CompatMode(String mode) {
+    private AsciidocCompatMode(String mode) {
         this.mode = mode;
     }
     

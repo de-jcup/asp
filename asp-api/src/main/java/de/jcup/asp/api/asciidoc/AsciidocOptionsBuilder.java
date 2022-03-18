@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.OutputStream;
 import java.util.Map;
 
-public class OptionsBuilder {
+public class AsciidocOptionsBuilder {
 
-    private final Options options = new Options();
+    private final AsciidocOptions asciidocOptions = new AsciidocOptions();
 
-    OptionsBuilder() {
+    AsciidocOptionsBuilder() {
         super();
     }
 
@@ -19,8 +19,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder backend(String backend) {
-        this.options.setBackend(backend);
+    public AsciidocOptionsBuilder backend(String backend) {
+        this.asciidocOptions.setBackend(backend);
         return this;
     }
 
@@ -31,8 +31,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder docType(String docType) {
-        this.options.setDocType(docType);
+    public AsciidocOptionsBuilder docType(String docType) {
+        this.asciidocOptions.setDocType(docType);
         return this;
     }
 
@@ -43,8 +43,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder inPlace(boolean inPlace) {
-        this.options.setInPlace(inPlace);
+    public AsciidocOptionsBuilder inPlace(boolean inPlace) {
+        this.asciidocOptions.setInPlace(inPlace);
         return this;
     }
 
@@ -55,8 +55,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder headerFooter(boolean headerFooter) {
-        this.options.setHeaderFooter(headerFooter);
+    public AsciidocOptionsBuilder headerFooter(boolean headerFooter) {
+        this.asciidocOptions.setHeaderFooter(headerFooter);
         return this;
     }
 
@@ -69,8 +69,8 @@ public class OptionsBuilder {
      *            directory where templates are stored.
      * @return this instance.
      */
-    public OptionsBuilder templateDir(File templateDir) {
-        this.options.setTemplateDirs(templateDir.getAbsolutePath());
+    public AsciidocOptionsBuilder templateDir(File templateDir) {
+        this.asciidocOptions.setTemplateDirs(templateDir.getAbsolutePath());
         return this;
     }
 
@@ -81,9 +81,9 @@ public class OptionsBuilder {
      *            directories where templates are stored.
      * @return this instance.
      */
-    public OptionsBuilder templateDirs(File... templateDirs) {
+    public AsciidocOptionsBuilder templateDirs(File... templateDirs) {
         for (File templateDir : templateDirs) {
-            this.options.setTemplateDirs(templateDir.getAbsolutePath());
+            this.asciidocOptions.setTemplateDirs(templateDir.getAbsolutePath());
         }
         return this;
     }
@@ -95,8 +95,8 @@ public class OptionsBuilder {
      *            used to render the document.
      * @return this instance.
      */
-    public OptionsBuilder templateEngine(String templateEngine) {
-        this.options.setTemplateEngine(templateEngine);
+    public AsciidocOptionsBuilder templateEngine(String templateEngine) {
+        this.asciidocOptions.setTemplateEngine(templateEngine);
         return this;
     }
 
@@ -107,34 +107,34 @@ public class OptionsBuilder {
      *            true if template cache is required, false otherwise.
      * @return this instance.
      */
-    public OptionsBuilder templateCache(boolean templateCache) {
-        this.options.setTemplateCache(templateCache);
+    public AsciidocOptionsBuilder templateCache(boolean templateCache) {
+        this.asciidocOptions.setTemplateCache(templateCache);
         return this;
     }
 
     /**
      * Sets attributes used for rendering input.
-     * @deprecated Use {@link #attributes(Attributes)} instead.
+     * @deprecated Use {@link #asciidocAttributes(AsciidocAttributes)} instead.
      * 
      * @param attributes
      *            map.
      * @return this instance.
      */
     @Deprecated
-    public OptionsBuilder attributes(Map<String, Object> attributes) {
-        this.options.setAttributes(attributes);
+    public AsciidocOptionsBuilder asciidocAttributes(Map<String, Object> attributes) {
+        this.asciidocOptions.setAttributes(attributes);
         return this;
     }
 
     /**
      * Sets attributes used for rendering input.
      * 
-     * @param attributes
+     * @param asciidocAttributes
      *            map.
      * @return this instance.
      */
-    public OptionsBuilder attributes(Attributes attributes) {
-        this.options.setAttributes(attributes);
+    public AsciidocOptionsBuilder asciidocAttributes(AsciidocAttributes asciidocAttributes) {
+        this.asciidocOptions.setAttributes(asciidocAttributes);
         return this;
     }
     
@@ -145,13 +145,13 @@ public class OptionsBuilder {
      *            name of output file.
      * @return this instance.
      */
-    public OptionsBuilder toFile(File toFile) {
-        this.options.setToFile(toFile.getPath());
+    public AsciidocOptionsBuilder toFile(File toFile) {
+        this.asciidocOptions.setToFile(toFile.getPath());
         return this;
     }
 
-    public OptionsBuilder toStream(OutputStream toStream) {
-        this.options.setToStream(toStream);
+    public AsciidocOptionsBuilder toStream(OutputStream toStream) {
+        this.asciidocOptions.setToStream(toStream);
         return this;
     }
 
@@ -162,8 +162,8 @@ public class OptionsBuilder {
      *            where output is generated.
      * @return this instance.
      */
-    public OptionsBuilder toDir(File directory) {
-        this.options.setToDir(directory.getAbsolutePath());
+    public AsciidocOptionsBuilder toDir(File directory) {
+        this.asciidocOptions.setToDir(directory.getAbsolutePath());
         return this;
     }
 
@@ -174,20 +174,20 @@ public class OptionsBuilder {
      *            true if directory must be created, false otherwise.
      * @return this instance.
      */
-    public OptionsBuilder mkDirs(boolean mkDirs) {
-        this.options.setMkDirs(mkDirs);
+    public AsciidocOptionsBuilder mkDirs(boolean mkDirs) {
+        this.asciidocOptions.setMkDirs(mkDirs);
         return this;
     }
 
     /**
      * Sets the safe mode.
      * 
-     * @param safeMode
+     * @param asciidocSafeMode
      *            to run asciidoctor.
      * @return this instance.
      */
-    public OptionsBuilder safe(SafeMode safeMode) {
-        this.options.setSafe(safeMode);
+    public AsciidocOptionsBuilder safe(AsciidocSafeMode asciidocSafeMode) {
+        this.asciidocOptions.setSafe(asciidocSafeMode);
         return this;
     }
 
@@ -198,8 +198,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder sourcemap(boolean sourcemap) {
-        this.options.setSourcemap(sourcemap);
+    public AsciidocOptionsBuilder sourcemap(boolean sourcemap) {
+        this.asciidocOptions.setSourcemap(sourcemap);
         return this;
     }
 
@@ -210,8 +210,8 @@ public class OptionsBuilder {
      *            implementation.
      * @return this instance.
      */
-    public OptionsBuilder eruby(String eruby) {
-        this.options.setEruby(eruby);
+    public AsciidocOptionsBuilder eruby(String eruby) {
+        this.asciidocOptions.setEruby(eruby);
         return this;
     }
     
@@ -222,8 +222,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder catalogAssets(boolean catalogAssets) {
-        this.options.setCatalogAssets(catalogAssets);
+    public AsciidocOptionsBuilder catalogAssets(boolean catalogAssets) {
+        this.asciidocOptions.setCatalogAssets(catalogAssets);
         return this;
     }
 
@@ -234,8 +234,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder compact(boolean compact) {
-        this.options.setCompact(compact);
+    public AsciidocOptionsBuilder compact(boolean compact) {
+        this.asciidocOptions.setCompact(compact);
         return this;
     }
 
@@ -246,8 +246,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder parse(boolean parse) {
-        this.options.setParse(parse);
+    public AsciidocOptionsBuilder parse(boolean parse) {
+        this.asciidocOptions.setParse(parse);
         return this;
     }
 
@@ -258,8 +258,8 @@ public class OptionsBuilder {
      *            value.
      * @return this instance.
      */
-    public OptionsBuilder parseHeaderOnly(boolean parseHeaderOnly) {
-        this.options.setParseHeaderOnly(parseHeaderOnly);
+    public AsciidocOptionsBuilder parseHeaderOnly(boolean parseHeaderOnly) {
+        this.asciidocOptions.setParseHeaderOnly(parseHeaderOnly);
         return this;
     }
 
@@ -270,8 +270,8 @@ public class OptionsBuilder {
      *            destination directory.
      * @return this instance.
      */
-    public OptionsBuilder destinationDir(File destinationDir) {
-        this.options.setDestinationDir(destinationDir.getAbsolutePath());
+    public AsciidocOptionsBuilder destinationDir(File destinationDir) {
+        this.asciidocOptions.setDestinationDir(destinationDir.getAbsolutePath());
         return this;
     }
 
@@ -284,8 +284,8 @@ public class OptionsBuilder {
      *            source directory.
      * @return this instance.
      */
-    public OptionsBuilder sourceDir(File srcDir) {
-        this.options.setSourceDir(srcDir.getAbsolutePath());
+    public AsciidocOptionsBuilder sourceDir(File srcDir) {
+        this.asciidocOptions.setSourceDir(srcDir.getAbsolutePath());
         return this;
     }
     
@@ -296,22 +296,22 @@ public class OptionsBuilder {
      *            working directory.
      * @return this instance.
      */
-    public OptionsBuilder baseDir(File baseDir) {
-        this.options.setBaseDir(baseDir.getAbsolutePath());
+    public AsciidocOptionsBuilder baseDir(File baseDir) {
+        this.asciidocOptions.setBaseDir(baseDir.getAbsolutePath());
         return this;
     }
     
     /**
-     * Returns a valid Options instance.
+     * Returns a valid AsciidocOptions instance.
      * 
-     * @return options instance.
+     * @return asciidocOptions instance.
      */
-    public Options build() {
-        return this.options;
+    public AsciidocOptions build() {
+        return this.asciidocOptions;
     }
 
-    public OptionsBuilder customOption(String option, Object value) {
-        this.options.setCustomOption(option,value);
+    public AsciidocOptionsBuilder customOption(String option, Object value) {
+        this.asciidocOptions.setCustomOption(option,value);
         return this;
     }
 

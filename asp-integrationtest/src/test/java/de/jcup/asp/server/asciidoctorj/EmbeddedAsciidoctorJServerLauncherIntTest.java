@@ -29,8 +29,8 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import de.jcup.asp.api.Response;
-import de.jcup.asp.api.asciidoc.Attributes;
-import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.api.asciidoc.AsciidocAttributes;
+import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.LaunchException;
@@ -94,11 +94,11 @@ public class EmbeddedAsciidoctorJServerLauncherIntTest {
         AspClient client = launchServerAndGetPreparedClient();
 
         Path adocfile = createSimpleAdocTestFile("To check html works...");
-        Options options = Options.builder().backend("html").build();
-        Attributes attributes = Attributes.builder().build();
+        AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("html").build();
+        AsciidocAttributes asciidocAttributes = AsciidocAttributes.builder().build();
 
         /* execute */
-        Response response = client.convertFile(adocfile, options, attributes, null);
+        Response response = client.convertFile(adocfile, asciidocOptions, asciidocAttributes, null);
 
         /* test */
         assertFalse(response.failed());
@@ -116,11 +116,11 @@ public class EmbeddedAsciidoctorJServerLauncherIntTest {
 
         Path adocfile = createSimpleAdocTestFile("To check pdf works...");
         
-        Options options = Options.builder().backend("pdf").build();
-        Attributes attributes = Attributes.builder().build();
+        AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("pdf").build();
+        AsciidocAttributes asciidocAttributes = AsciidocAttributes.builder().build();
 
         /* execute */
-        Response response = client.convertFile(adocfile, options, attributes, null);
+        Response response = client.convertFile(adocfile, asciidocOptions, asciidocAttributes, null);
 
         /* test */
         assertFalse(response.failed());

@@ -27,8 +27,8 @@ import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
-import de.jcup.asp.api.asciidoc.Attributes;
-import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.api.asciidoc.AsciidocAttributes;
+import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.core.Constants;
 import de.jcup.asp.core.CryptoAccess;
 import de.jcup.asp.core.LogHandler;
@@ -88,20 +88,20 @@ public class AspClient {
         return portNumber;
     }
 
-    public Response convertFile(Path adocfile, Options options, Attributes attributes, AspClientProgressMonitor monitor ) throws AspClientException {
+    public Response convertFile(Path adocfile, AsciidocOptions asciidocOptions, AsciidocAttributes asciidocAttributes, AspClientProgressMonitor monitor ) throws AspClientException {
         Request request = createRequest();
-        if (options==null) {
-            options = Options.builder().build();
+        if (asciidocOptions==null) {
+            asciidocOptions = AsciidocOptions.builder().build();
         }
-        if (attributes==null) {
-            attributes = Attributes.builder().build();
+        if (asciidocAttributes==null) {
+            asciidocAttributes = AsciidocAttributes.builder().build();
         }
 
         request.set(StringRequestParameterKey.COMMAND, Commands.CONVERT_FILE);
 
         request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
-        request.set(MapRequestParameterKey.OPTIONS, options.toMap());
-        request.set(MapRequestParameterKey.ATTRIBUTES, attributes.toMap());
+        request.set(MapRequestParameterKey.OPTIONS, asciidocOptions.toMap());
+        request.set(MapRequestParameterKey.ATTRIBUTES, asciidocAttributes.toMap());
 
         return callServer(request,monitor);
 

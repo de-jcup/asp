@@ -1,6 +1,6 @@
 package de.jcup.asp.api.asciidoc;
 
-public enum SafeMode {
+public enum AsciidocSafeMode {
 
     /**
      * A safe mode level that disables all security features enforced by Asciidoctor 
@@ -13,14 +13,14 @@ public enum SafeMode {
     SAFE(1),
     /**
      * A safe mode level that disallows the document from setting attributes that would affect the rendering of the
-     * document, in addition to all the security features of SafeMode::SAFE. For instance, this level disallows changing
+     * document, in addition to all the security features of AsciidocSafeMode::SAFE. For instance, this level disallows changing
      * the backend or the source-highlighter using an attribute defined in the source document. This is the most
      * fundamental level of security for server-side deployments (hence the name).
      */
     SERVER(10),
     /**
      * A safe mode level that disallows the document from attempting to read files from the file system and including
-     * the contents of them into the document, in additional to all the security features of SafeMode::SERVER. For
+     * the contents of them into the document, in additional to all the security features of AsciidocSafeMode::SERVER. For
      * instance, this level disallows use of the include::[] macro and the embedding of binary content (data uri),
      * stylesheets and JavaScripts referenced by the document.(Asciidoctor and trusted extensions may still be allowed
      * to embed trusted content into the document).
@@ -32,7 +32,7 @@ public enum SafeMode {
 
     private int level;
 
-    private SafeMode(int level) {
+    private AsciidocSafeMode(int level) {
         this.level = level;
     }
 
@@ -40,7 +40,7 @@ public enum SafeMode {
         return level;
     }
 
-    public static final SafeMode safeMode(int level) {
+    public static final AsciidocSafeMode asciidocSafeMode(int level) {
         switch(level) {
             case 0: return UNSAFE;
             case 1: return SAFE;

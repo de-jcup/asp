@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jcup.asp.api.Response;
-import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.core.OutputHandler;
@@ -84,7 +84,7 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
         client.setPortNumber(port);
 
         Path adocfile = createSimpleAdocTestFile();
-        Options options = Options.builder().backend("pdf").build();
+        AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("pdf").build();
         
         DefaultAspClientProgressMonitor monitor = new DefaultAspClientProgressMonitor();
         Runnable runnable = new Runnable() {
@@ -105,7 +105,7 @@ public class ExternalProcessAsciidoctorJServerLauncherIntTest {
 
         /* execute */
         LOG.info("> start convert");
-        Response response = client.convertFile(adocfile, options, null, monitor);
+        Response response = client.convertFile(adocfile, asciidocOptions, null, monitor);
         LOG.info("> end of convert call");
 
         /* test */

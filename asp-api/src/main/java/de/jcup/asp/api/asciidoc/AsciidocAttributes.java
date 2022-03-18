@@ -1,6 +1,6 @@
 package de.jcup.asp.api.asciidoc;
 
-import static de.jcup.asp.api.asciidoc.Attribute.*;
+import static de.jcup.asp.api.asciidoc.AsciidocAttribute.*;
 
 import java.net.URI;
 import java.text.Format;
@@ -10,27 +10,27 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Attributes {
+public class AsciidocAttributes {
 
     private static Format DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static Format TIME_FORMAT = new SimpleDateFormat("HH:mm:ss z");
 
     private Map<String, Object> attributes = new LinkedHashMap<>();
 
-    Attributes() {
+    AsciidocAttributes() {
         super();
     }
 
     /**
-     * @return Empty AttributesBuilder instance.
+     * @return Empty AsciidocAttributesBuilder instance.
      */
-    public static AttributesBuilder builder() {
-        return new AttributesBuilder();
+    public static AsciidocAttributesBuilder builder() {
+        return new AsciidocAttributesBuilder();
     }
 
     /**
      * Allow Asciidoctor to read content from an URI. Additionally the option
-     * {@link SafeMode} must be less than {@link SafeMode#SECURE} to enable
+     * {@link AsciidocSafeMode} must be less than {@link AsciidocSafeMode#SECURE} to enable
      * inclusion of content from an URI.
      * 
      * @see <a href=
@@ -267,10 +267,10 @@ public class Attributes {
     /**
      * Sets if a table of contents should be rendered or not.
      * 
-     * @param placement position of toc.
+     * @param asciidocPlacement position of toc.
      */
-    public void setTableOfContents(Placement placement) {
-        this.put(TOC, placement.getPosition());
+    public void setTableOfContents(AsciidocPlacement asciidocPlacement) {
+        this.put(TOC, asciidocPlacement.getPosition());
     }
 
     /**
@@ -391,8 +391,8 @@ public class Attributes {
     }
 
     /**
-     * Sets which admonition icons to use. Attributes.IMAGE_ICONS constant can be
-     * used to use the original icons with images or Attributes.FONT_ICONS for font
+     * Sets which admonition icons to use. AsciidocAttributes.IMAGE_ICONS constant can be
+     * used to use the original icons with images or AsciidocAttributes.FONT_ICONS for font
      * icons (font-awesome).
      * 
      * @param iconsName value.
@@ -488,17 +488,17 @@ public class Attributes {
     public void setNoFooter(boolean noFooter) {
     }
 
-    private void put(Attribute atribute, Object object) {
+    private void put(AsciidocAttribute atribute, Object object) {
         this.attributes.put(atribute.getKey(), object);
     }
 
     /**
      * Sets compat-mode attribute.
      * 
-     * @param compatMode value.
+     * @param asciidocCompatMode value.
      */
-    public void setCompatMode(CompatMode compatMode) {
-        this.put(COMPAT_MODE, compatMode.getMode());
+    public void setCompatMode(AsciidocCompatMode asciidocCompatMode) {
+        this.put(COMPAT_MODE, asciidocCompatMode.getMode());
     }
     
     /**

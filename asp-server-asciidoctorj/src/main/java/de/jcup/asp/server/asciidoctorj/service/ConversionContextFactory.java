@@ -28,7 +28,7 @@ private static final Logger LOG = LoggerFactory.getLogger(ConversionContextFacto
         Attributes attributes = attributeProvider.getAttributes(request);
         
         Map<String, Object> optionsAsMap = request.getMap(MapRequestParameterKey.OPTIONS);
-        LOG.debug("Options:{}", optionsAsMap);
+        LOG.debug("AsciidocOptions:{}", optionsAsMap);
         
         OptionsBuilder optionsBuilder = createOptoinsBuilderWithOptionsSet(optionsAsMap);
         

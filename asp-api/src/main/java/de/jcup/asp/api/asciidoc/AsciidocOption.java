@@ -1,6 +1,6 @@
 package de.jcup.asp.api.asciidoc;
 
-public enum Option {
+public enum AsciidocOption {
 
     IN_PLACE("in_place"),
 
@@ -50,7 +50,7 @@ public enum Option {
 
     private String key;
 
-    private Option(String key) {
+    private AsciidocOption(String key) {
         this.key = key;
     }
 

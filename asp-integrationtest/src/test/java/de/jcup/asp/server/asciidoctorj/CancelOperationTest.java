@@ -27,8 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jcup.asp.api.Response;
-import de.jcup.asp.api.asciidoc.Attributes;
-import de.jcup.asp.api.asciidoc.Options;
+import de.jcup.asp.api.asciidoc.AsciidocAttributes;
+import de.jcup.asp.api.asciidoc.AsciidocOptions;
 import de.jcup.asp.client.AspClient;
 import de.jcup.asp.client.DefaultAspClientProgressMonitor;
 import de.jcup.asp.integrationtest.FakeRequestHandler;
@@ -108,15 +108,15 @@ public class CancelOperationTest {
             delayedCancelByUserThread.start();
             
         }
-        Options options = Options.builder().backend("html").build();
-        Attributes attributes = Attributes.builder().build();
+        AsciidocOptions asciidocOptions = AsciidocOptions.builder().backend("html").build();
+        AsciidocAttributes asciidocAttributes = AsciidocAttributes.builder().build();
         
         /* execute */
         LOG.info("> start convert");
         long start = System.currentTimeMillis();
         
         Path adocfile = createSimpleAdocTestFile("...");
-        Response response = client.convertFile(adocfile, options, attributes, monitor);
+        Response response = client.convertFile(adocfile, asciidocOptions, asciidocAttributes, monitor);
         long end = System.currentTimeMillis();
         LOG.info("> end of convert call");
         LOG.info("Response:"+response.convertToString());

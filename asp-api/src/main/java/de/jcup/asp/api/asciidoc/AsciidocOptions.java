@@ -1,5 +1,5 @@
 package de.jcup.asp.api.asciidoc;
-import static de.jcup.asp.api.asciidoc.Option.*;
+import static de.jcup.asp.api.asciidoc.AsciidocOption.*;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -8,29 +8,29 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-public class Options {
+public class AsciidocOptions {
 
     
     private Map<String, Object> options = new HashMap<>();
 
-    Options() {
+    AsciidocOptions() {
         super();
     }
 
-    public static OptionsBuilder builder() {
-        return new OptionsBuilder();
+    public static AsciidocOptionsBuilder builder() {
+        return new AsciidocOptionsBuilder();
     }
     
     public void setInPlace(boolean inPlace) {
         this.put(IN_PLACE, inPlace);
     }
 
-    private void put(Option option, Object value) {
-        this.options.put(option.getKey(), value);
+    private void put(AsciidocOption asciidocOption, Object value) {
+        this.options.put(asciidocOption.getKey(), value);
     }
     
-    public void setAttributes(Attributes attributes) {
-        this.put(ATTRIBUTES, attributes.toMap());
+    public void setAttributes(AsciidocAttributes asciidocAttributes) {
+        this.put(ATTRIBUTES, asciidocAttributes.toMap());
     }
 
     public void setAttributes(Map<String, Object> attributes) {
@@ -104,11 +104,11 @@ public class Options {
     /**
      * Safe method calls safeMode.getLevel() to put the required level.
      * 
-     * @param safeMode
+     * @param asciidocSafeMode
      *            enum.
      */
-    public void setSafe(SafeMode safeMode) {
-        this.put(SAFE, safeMode.getLevel());
+    public void setSafe(AsciidocSafeMode asciidocSafeMode) {
+        this.put(SAFE, asciidocSafeMode.getLevel());
     }
 
     /**

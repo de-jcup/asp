@@ -1,6 +1,6 @@
 package de.jcup.asp.api.asciidoc;
 
-public enum Placement {
+public enum AsciidocPlacement {
 
     TOP("top"), 
     
@@ -16,7 +16,7 @@ public enum Placement {
 
     private String position;
     
-    Placement(String position) {
+    AsciidocPlacement(String position) {
         this.position = position;
     }
     

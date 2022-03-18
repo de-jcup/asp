@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
-import de.jcup.asp.api.asciidoc.Attribute;
+import de.jcup.asp.api.asciidoc.AsciidocAttribute;
 
 public class RequestAndEnvironmentAttributeProvider {
 
@@ -17,7 +17,7 @@ public class RequestAndEnvironmentAttributeProvider {
 
     public Attributes getAttributes(Request request) {
         Map<String, Object> attributesAsMap = request.getMap(MapRequestParameterKey.ATTRIBUTES);
-        LOG.debug("Attributes:{}", attributesAsMap);
+        LOG.debug("AsciidocAttributes:{}", attributesAsMap);
 
         AttributesBuilder attributesBuilder = createAttributesBuilderWithAttributesSet(attributesAsMap);
 
@@ -39,7 +39,7 @@ public class RequestAndEnvironmentAttributeProvider {
 
         for (String attribute : attributesAsMap.keySet()) {
             boolean unknownAttribute = true;
-            for (Attribute wellknown : Attribute.values()) {
+            for (AsciidocAttribute wellknown : AsciidocAttribute.values()) {
                 if (wellknown.getKey().equals(attribute)) {
                     unknownAttribute = false;
                     break;

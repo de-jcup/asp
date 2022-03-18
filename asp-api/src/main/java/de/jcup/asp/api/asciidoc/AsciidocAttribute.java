@@ -1,6 +1,6 @@
 package de.jcup.asp.api.asciidoc;
 
-public enum Attribute {
+public enum AsciidocAttribute {
 
     TOC("toc"),
 
@@ -96,7 +96,7 @@ public enum Attribute {
 
     private String key;
 
-    private Attribute(String key) {
+    private AsciidocAttribute(String key) {
         this.key = key;
     }
 

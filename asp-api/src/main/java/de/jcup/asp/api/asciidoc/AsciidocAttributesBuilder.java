@@ -3,11 +3,11 @@ package de.jcup.asp.api.asciidoc;
 import java.net.URI;
 import java.util.Date;
 
-public class AttributesBuilder {
+public class AsciidocAttributesBuilder {
 
-    private final Attributes attributes = new Attributes();
+    private final AsciidocAttributes asciidocAttributes = new AsciidocAttributes();
 
-    AttributesBuilder() {
+    AsciidocAttributesBuilder() {
         super();
     }
 
@@ -17,8 +17,8 @@ public class AttributesBuilder {
      * @param sourceLanguage value.
      * @return this instance.
      */
-    public AttributesBuilder sourceLanguage(String sourceLanguage) {
-        this.attributes.setSourceLanguage(sourceLanguage);
+    public AsciidocAttributesBuilder sourceLanguage(String sourceLanguage) {
+        this.asciidocAttributes.setSourceLanguage(sourceLanguage);
         return this;
     }
 
@@ -28,8 +28,8 @@ public class AttributesBuilder {
      * @param skipFrontMatter value.
      * @return this instance.
      */
-    public AttributesBuilder skipFrontMatter(boolean skipFrontMatter) {
-        this.attributes.setSkipFrontMatter(skipFrontMatter);
+    public AsciidocAttributesBuilder skipFrontMatter(boolean skipFrontMatter) {
+        this.asciidocAttributes.setSkipFrontMatter(skipFrontMatter);
         return this;
     }
 
@@ -40,8 +40,8 @@ public class AttributesBuilder {
      * @param ignoreUndefinedAttributes value.
      * @return this instance.
      */
-    public AttributesBuilder ignoreUndefinedAttributes(boolean ignoreUndefinedAttributes) {
-        this.attributes.setIgnoreUndefinedAttributes(ignoreUndefinedAttributes);
+    public AsciidocAttributesBuilder ignoreUndefinedAttributes(boolean ignoreUndefinedAttributes) {
+        this.asciidocAttributes.setIgnoreUndefinedAttributes(ignoreUndefinedAttributes);
         return this;
     }
 
@@ -51,8 +51,8 @@ public class AttributesBuilder {
      * @param maxIncludeDepth value.
      * @return this instance.
      */
-    public AttributesBuilder maxIncludeDepth(int maxIncludeDepth) {
-        this.attributes.setMaxIncludeDepth(maxIncludeDepth);
+    public AsciidocAttributesBuilder maxIncludeDepth(int maxIncludeDepth) {
+        this.asciidocAttributes.setMaxIncludeDepth(maxIncludeDepth);
         return this;
     }
 
@@ -62,8 +62,8 @@ public class AttributesBuilder {
      * @param sectnumlevels value.
      * @return this instance.
      */
-    public AttributesBuilder sectNumLevels(int sectnumlevels) {
-        this.attributes.setSectNumLevels(sectnumlevels);
+    public AsciidocAttributesBuilder sectNumLevels(int sectnumlevels) {
+        this.asciidocAttributes.setSectNumLevels(sectnumlevels);
         return this;
     }
 
@@ -73,8 +73,8 @@ public class AttributesBuilder {
      * @param attributeMissing value.
      * @return this instance.
      */
-    public AttributesBuilder attributeMissing(String attributeMissing) {
-        this.attributes.setAttributeMissing(attributeMissing);
+    public AsciidocAttributesBuilder attributeMissing(String attributeMissing) {
+        this.asciidocAttributes.setAttributeMissing(attributeMissing);
         return this;
     }
 
@@ -84,8 +84,8 @@ public class AttributesBuilder {
      * @param attributeUndefined value.
      * @return this instance.
      */
-    public AttributesBuilder attributeUndefined(String attributeUndefined) {
-        this.attributes.setAttributeUndefined(attributeUndefined);
+    public AsciidocAttributesBuilder attributeUndefined(String attributeUndefined) {
+        this.asciidocAttributes.setAttributeUndefined(attributeUndefined);
         return this;
     }
 
@@ -95,8 +95,8 @@ public class AttributesBuilder {
      * @param setAnchors value.
      * @return this instance.
      */
-    public AttributesBuilder setAnchors(boolean setAnchors) {
-        this.attributes.setAnchors(setAnchors);
+    public AsciidocAttributesBuilder setAnchors(boolean setAnchors) {
+        this.asciidocAttributes.setAnchors(setAnchors);
         return this;
     }
 
@@ -106,19 +106,19 @@ public class AttributesBuilder {
      * @param untitledLabel value.
      * @return this instance.
      */
-    public AttributesBuilder untitledLabel(String untitledLabel) {
-        this.attributes.setUntitledLabel(untitledLabel);
+    public AsciidocAttributesBuilder untitledLabel(String untitledLabel) {
+        this.asciidocAttributes.setUntitledLabel(untitledLabel);
         return this;
     }
 
     /**
      * Sets table of contents attribute.
      * 
-     * @param placement where toc is rendered.
+     * @param asciidocPlacement where toc is rendered.
      * @return this instance.
      */
-    public AttributesBuilder tableOfContents(Placement placement) {
-        this.attributes.setTableOfContents(placement);
+    public AsciidocAttributesBuilder tableOfContents(AsciidocPlacement asciidocPlacement) {
+        this.asciidocAttributes.setTableOfContents(asciidocPlacement);
         return this;
     }
 
@@ -128,8 +128,8 @@ public class AttributesBuilder {
      * @param allowUriRead value.
      * @return this instance.
      */
-    public AttributesBuilder allowUriRead(boolean allowUriRead) {
-        this.attributes.setAllowUriRead(allowUriRead);
+    public AsciidocAttributesBuilder allowUriRead(boolean allowUriRead) {
+        this.asciidocAttributes.setAllowUriRead(allowUriRead);
         return this;
     }
 
@@ -139,8 +139,8 @@ public class AttributesBuilder {
      * @param showTitle value.
      * @return this instance
      */
-    public AttributesBuilder showTitle(boolean showTitle) {
-        this.attributes.setShowTitle(showTitle);
+    public AsciidocAttributesBuilder showTitle(boolean showTitle) {
+        this.asciidocAttributes.setShowTitle(showTitle);
         return this;
     }
 
@@ -150,8 +150,8 @@ public class AttributesBuilder {
      * @param title for document.
      * @return this instance.
      */
-    public AttributesBuilder title(String title) {
-        this.attributes.setTitle(title);
+    public AsciidocAttributesBuilder title(String title) {
+        this.asciidocAttributes.setTitle(title);
         return this;
     }
 
@@ -161,8 +161,8 @@ public class AttributesBuilder {
      * @param imagesDir location.
      * @return this instance.
      */
-    public AttributesBuilder imagesDir(String imagesDir) {
-        this.attributes.setImagesDir(imagesDir);
+    public AsciidocAttributesBuilder imagesDir(String imagesDir) {
+        this.asciidocAttributes.setImagesDir(imagesDir);
         return this;
     }
 
@@ -173,8 +173,8 @@ public class AttributesBuilder {
      *                          coderay).
      * @return this instance.
      */
-    public AttributesBuilder sourceHighlighter(String sourceHighlighter) {
-        this.attributes.setSourceHighlighter(sourceHighlighter);
+    public AsciidocAttributesBuilder sourceHighlighter(String sourceHighlighter) {
+        this.asciidocAttributes.setSourceHighlighter(sourceHighlighter);
         return this;
     }
 
@@ -184,8 +184,8 @@ public class AttributesBuilder {
      * @param date
      * @return this instance.
      */
-    public AttributesBuilder localDate(Date date) {
-        this.attributes.setLocalDate(date);
+    public AsciidocAttributesBuilder localDate(Date date) {
+        this.asciidocAttributes.setLocalDate(date);
         return this;
     }
 
@@ -195,8 +195,8 @@ public class AttributesBuilder {
      * @param time
      * @return this instance.
      */
-    public AttributesBuilder localTime(Date time) {
-        this.attributes.setLocalTime(time);
+    public AsciidocAttributesBuilder localTime(Date time) {
+        this.asciidocAttributes.setLocalTime(time);
         return this;
     }
 
@@ -206,8 +206,8 @@ public class AttributesBuilder {
      * @param date
      * @return this instance.
      */
-    public AttributesBuilder docDate(Date date) {
-        this.attributes.setDocDate(date);
+    public AsciidocAttributesBuilder docDate(Date date) {
+        this.asciidocAttributes.setDocDate(date);
         return this;
     }
 
@@ -217,8 +217,8 @@ public class AttributesBuilder {
      * @param time
      * @return this instance.
      */
-    public AttributesBuilder docTime(Date time) {
-        this.attributes.setDocTime(time);
+    public AsciidocAttributesBuilder docTime(Date time) {
+        this.asciidocAttributes.setDocTime(time);
         return this;
     }
 
@@ -228,8 +228,8 @@ public class AttributesBuilder {
      * @param toc value
      * @return this instance.
      */
-    public AttributesBuilder tableOfContents(boolean toc) {
-        this.attributes.setTableOfContents(toc);
+    public AsciidocAttributesBuilder tableOfContents(boolean toc) {
+        this.asciidocAttributes.setTableOfContents(toc);
         return this;
     }
 
@@ -239,8 +239,8 @@ public class AttributesBuilder {
      * @param styleSheetName of css file.
      * @return this instance.
      */
-    public AttributesBuilder styleSheetName(String styleSheetName) {
-        this.attributes.setStyleSheetName(styleSheetName);
+    public AsciidocAttributesBuilder styleSheetName(String styleSheetName) {
+        this.asciidocAttributes.setStyleSheetName(styleSheetName);
         return this;
     }
 
@@ -249,8 +249,8 @@ public class AttributesBuilder {
      * 
      * @return this instance.
      */
-    public AttributesBuilder unsetStyleSheet() {
-        this.attributes.unsetStyleSheet();
+    public AsciidocAttributesBuilder unsetStyleSheet() {
+        this.asciidocAttributes.unsetStyleSheet();
         return this;
     }
 
@@ -260,8 +260,8 @@ public class AttributesBuilder {
      * @param stylesDir directory.
      * @return this instance.
      */
-    public AttributesBuilder stylesDir(String stylesDir) {
-        this.attributes.setStylesDir(stylesDir);
+    public AsciidocAttributesBuilder stylesDir(String stylesDir) {
+        this.asciidocAttributes.setStylesDir(stylesDir);
         return this;
     }
 
@@ -271,8 +271,8 @@ public class AttributesBuilder {
      * @param linkCss true if css is linked, false if css is embedded.
      * @return this instance.
      */
-    public AttributesBuilder linkCss(boolean linkCss) {
-        this.attributes.setLinkCss(linkCss);
+    public AsciidocAttributesBuilder linkCss(boolean linkCss) {
+        this.asciidocAttributes.setLinkCss(linkCss);
         return this;
     }
 
@@ -283,21 +283,21 @@ public class AttributesBuilder {
      *                otherwise.
      * @return this instance.
      */
-    public AttributesBuilder copyCss(boolean copyCss) {
-        this.attributes.setCopyCss(copyCss);
+    public AsciidocAttributesBuilder copyCss(boolean copyCss) {
+        this.asciidocAttributes.setCopyCss(copyCss);
         return this;
     }
 
     /**
-     * Sets which admonition icons to use. Attributes.IMAGE_ICONS constant can be
-     * used to use the original icons with images or Attributes.FONT_ICONS for font
+     * Sets which admonition icons to use. AsciidocAttributes.IMAGE_ICONS constant can be
+     * used to use the original icons with images or AsciidocAttributes.FONT_ICONS for font
      * icons (font-awesome).
      * 
      * @param icons value.
      * @return this instance.
      */
-    public AttributesBuilder icons(String icons) {
-        this.attributes.setIcons(icons);
+    public AsciidocAttributesBuilder icons(String icons) {
+        this.asciidocAttributes.setIcons(icons);
         return this;
     }
 
@@ -309,8 +309,8 @@ public class AttributesBuilder {
      * @param iconFontRemote true if attribute enabled false otherwise.
      * @return this instance.
      */
-    public AttributesBuilder iconFontRemote(boolean iconFontRemote) {
-        this.attributes.setIconFontRemote(iconFontRemote);
+    public AsciidocAttributesBuilder iconFontRemote(boolean iconFontRemote) {
+        this.asciidocAttributes.setIconFontRemote(iconFontRemote);
         return this;
     }
 
@@ -321,8 +321,8 @@ public class AttributesBuilder {
      * @param cdnUri uri where css is stored.
      * @return this instance.
      */
-    public AttributesBuilder iconFontCdn(URI cdnUri) {
-        this.attributes.setIconFontCdn(cdnUri);
+    public AsciidocAttributesBuilder iconFontCdn(URI cdnUri) {
+        this.asciidocAttributes.setIconFontCdn(cdnUri);
         return this;
     }
 
@@ -333,8 +333,8 @@ public class AttributesBuilder {
      * @param iconFontName stylesheet name without .css extension.
      * @return this instance.
      */
-    public AttributesBuilder iconFontName(String iconFontName) {
-        this.attributes.setIconFontName(iconFontName);
+    public AsciidocAttributesBuilder iconFontName(String iconFontName) {
+        this.asciidocAttributes.setIconFontName(iconFontName);
         return this;
     }
 
@@ -344,8 +344,8 @@ public class AttributesBuilder {
      * @param iconsDir location.
      * @return this instance.
      */
-    public AttributesBuilder iconsDir(String iconsDir) {
-        this.attributes.setIconsDir(iconsDir);
+    public AsciidocAttributesBuilder iconsDir(String iconsDir) {
+        this.asciidocAttributes.setIconsDir(iconsDir);
         return this;
     }
 
@@ -354,8 +354,8 @@ public class AttributesBuilder {
      * 
      * @param dataUri true if images should be embedded, false otherwise.
      */
-    public AttributesBuilder dataUri(boolean dataUri) {
-        this.attributes.setDataUri(dataUri);
+    public AsciidocAttributesBuilder dataUri(boolean dataUri) {
+        this.asciidocAttributes.setDataUri(dataUri);
         return this;
     }
 
@@ -366,8 +366,8 @@ public class AttributesBuilder {
      *                       otherwise.
      * @return this instance.
      */
-    public AttributesBuilder sectionNumbers(boolean sectionNumbers) {
-        this.attributes.setSectionNumbers(sectionNumbers);
+    public AsciidocAttributesBuilder sectionNumbers(boolean sectionNumbers) {
+        this.asciidocAttributes.setSectionNumbers(sectionNumbers);
         return this;
     }
 
@@ -378,8 +378,8 @@ public class AttributesBuilder {
      *                   otherwise.
      * @return this instance.
      */
-    public AttributesBuilder hardbreaks(boolean hardbreaks) {
-        this.attributes.setHardbreaks(hardbreaks);
+    public AsciidocAttributesBuilder hardbreaks(boolean hardbreaks) {
+        this.asciidocAttributes.setHardbreaks(hardbreaks);
         return this;
     }
 
@@ -389,8 +389,8 @@ public class AttributesBuilder {
      * @param cacheUri true if URI content should be cached, false otherwise.
      * @return this instance.
      */
-    public AttributesBuilder cacheUri(boolean cacheUri) {
-        this.attributes.setCacheUri(cacheUri);
+    public AsciidocAttributesBuilder cacheUri(boolean cacheUri) {
+        this.asciidocAttributes.setCacheUri(cacheUri);
         return this;
     }
 
@@ -400,8 +400,8 @@ public class AttributesBuilder {
      * @param hiddenUriScheme true if URI is hidden, false otherwise.
      * @return this instance.
      */
-    public AttributesBuilder hiddenUriScheme(boolean hiddenUriScheme) {
-        this.attributes.setHideUriScheme(hiddenUriScheme);
+    public AsciidocAttributesBuilder hiddenUriScheme(boolean hiddenUriScheme) {
+        this.asciidocAttributes.setHideUriScheme(hiddenUriScheme);
         return this;
     }
 
@@ -411,8 +411,8 @@ public class AttributesBuilder {
      * @param appendixCaption value.
      * @return this instance.
      */
-    public AttributesBuilder appendixCaption(String appendixCaption) {
-        this.attributes.setAppendixCaption(appendixCaption);
+    public AsciidocAttributesBuilder appendixCaption(String appendixCaption) {
+        this.asciidocAttributes.setAppendixCaption(appendixCaption);
         return this;
     }
 
@@ -422,21 +422,21 @@ public class AttributesBuilder {
      * @param math value.
      * @return this instance.
      */
-    public AttributesBuilder math(String math) {
-        this.attributes.setMath(math);
+    public AsciidocAttributesBuilder math(String math) {
+        this.asciidocAttributes.setMath(math);
         return this;
     }
 
     /**
      * Sets linkattrs attribute.
      * 
-     * @param linkAttrs true if Asciidoctor should parse link macro attributes,
+     * @param linkAttrs true if Asciidoctor should parse link macro asciidocAttributes,
      *                  false otherwise.
      * 
      * @return this instance.
      */
-    public AttributesBuilder linkAttrs(boolean linkAttrs) {
-        this.attributes.setLinkAttrs(linkAttrs);
+    public AsciidocAttributesBuilder linkAttrs(boolean linkAttrs) {
+        this.asciidocAttributes.setLinkAttrs(linkAttrs);
         return this;
     }
 
@@ -446,8 +446,8 @@ public class AttributesBuilder {
      * @param experimental true if experimental features should be enabled, false
      *                     otherwise.
      */
-    public AttributesBuilder experimental(boolean experimental) {
-        this.attributes.setExperimental(experimental);
+    public AsciidocAttributesBuilder experimental(boolean experimental) {
+        this.asciidocAttributes.setExperimental(experimental);
         return this;
     }
 
@@ -457,33 +457,33 @@ public class AttributesBuilder {
      * @param noFooter true if footer block should not be shown, false otherwise.
      * @return this instance.
      */
-    public AttributesBuilder noFooter(boolean noFooter) {
-        this.attributes.setNoFooter(noFooter);
+    public AsciidocAttributesBuilder noFooter(boolean noFooter) {
+        this.asciidocAttributes.setNoFooter(noFooter);
         return this;
     }
 
     /**
      * Sets compat mode attribute.
      * 
-     * @param compatMode value.
+     * @param asciidocCompatMode value.
      * @return this instance.
      */
-    public AttributesBuilder compatMode(CompatMode compatMode) {
-        this.attributes.setCompatMode(compatMode);
+    public AsciidocAttributesBuilder asciidocCompatMode(AsciidocCompatMode asciidocCompatMode) {
+        this.asciidocAttributes.setCompatMode(asciidocCompatMode);
         return this;
     }
     
-    public AttributesBuilder customAttribute(String attribute, Object value) {
-        this.attributes.setCustomAttribute(attribute,value);
+    public AsciidocAttributesBuilder customAttribute(String attribute, Object value) {
+        this.asciidocAttributes.setCustomAttribute(attribute,value);
         return this;
     }
 
     /**
-     * Returns a valid Attributes instance.
+     * Returns a valid AsciidocAttributes instance.
      *
-     * @return attributes instance.
+     * @return asciidocAttributes instance.
      */
-    public Attributes build() {
-        return this.attributes;
+    public AsciidocAttributes build() {
+        return this.asciidocAttributes;
     }
 }
