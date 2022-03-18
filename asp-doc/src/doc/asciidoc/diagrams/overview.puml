@@ -1,0 +1,64 @@
+@startuml
+
+'skinparam linetype ortho
+'skinparam linetype polyline
+'top to bottom direction
+
+Frame "Server access" {
+
+    package "de.jcup.asp.server.core" {
+       [CoreAspServer] as core_server
+    }
+
+    package "de.jcup.asp.server.asciidoctorj" {
+    
+       component "Launcher" {
+         
+           component "Embedded" {
+               [EmbeddedAsciidoctorJServerLauncher] as embedded_launcher
+           }
+        
+           component "External process" {
+               [AsciidoctorJServerApplication] as standalone_application
+               [ExternalProcessAsciidoctorJServerLauncher] as standalone_launcher
+           }
+       }
+       
+       [AsciidoctorJServer] as server
+      
+    }
+
+}
+
+package "de.jcup.asp.client" {
+   [AspClient] as client
+}
+
+package "org.asciidoctor" {
+       [AsciidoctorJ] as asciidoctorj
+       [JRuby] as jruby
+       [Asciidoctor] as ad
+}
+
+
+
+standalone_launcher --> standalone_application 
+standalone_application -> server
+embedded_launcher -> server
+
+server ---> asciidoctorj
+server "starts" -up-> core_server
+
+note right of core_server
+
+   Provides server communication protocol
+   for client. 
+
+end note
+
+asciidoctorj -> jruby
+jruby->ad
+
+client <.down...> core_server
+
+@enduml

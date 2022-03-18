@@ -51,14 +51,19 @@ simple as possible and has nearly no more dependencies.
 
 == How should editors/tools use this server?
 
-=== ASP-server-asciidoctorj
+=== Overview
+image::doc/images/overview.png[]
+
+=== Details
+
+==== ASP-server-asciidoctorj
 You can use ASP server either as an external process or as an embedded server.
 
-==== As an external process
+===== As an external process
 For this case a specialized launcher was created. Just use `ExternalProcessAsciidoctorJServerLauncher` as done in 
 https://github.com/de-jcup/asp/blob/master/asp-doc/src/test/java/de/jcup/asp/example/ExternalProcessExample.java[ExternalProcessExample.java] and
 https://github.com/de-jcup/asp/blob/master/asp-doc/src/test/java/de/jcup/asp/example/ExternalProcessWithDebugOutputExample.java[ExternalProcessWithDebugOutputExample.java] 
 
-==== As embedded server
+===== As embedded server
 Same as external variant, but use `EmbeddedAsciidoctorJServerLauncher` as launcher. For examples look into integration tests.
-  
+
