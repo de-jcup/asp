@@ -18,19 +18,12 @@ package de.jcup.asp.server.asciidoctorj.service;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.Objects;
 
 import org.asciidoctor.Asciidoctor;
-import org.asciidoctor.Attributes;
-import org.asciidoctor.AttributesBuilder;
-import org.asciidoctor.Options;
-import org.asciidoctor.OptionsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jcup.asp.api.Backend;
-import de.jcup.asp.api.MapRequestParameterKey;
 import de.jcup.asp.api.Request;
 import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringRequestParameterKey;
@@ -42,10 +35,12 @@ public class ConvertLocalFileServiceImpl implements ConvertLocalFileService {
     public static final ConvertLocalFileService INSTANCE = new ConvertLocalFileServiceImpl();
     private static final Logger LOG = LoggerFactory.getLogger(ConvertLocalFileServiceImpl.class);
 
-    TargetFileNameProvider provider = new TargetFileNameProvider();
+    TargetFileNameProvider targetFileNameProvider;
+    ConversionContextFactory conversionContextFactory;
 
     ConvertLocalFileServiceImpl() {
-
+        targetFileNameProvider = new TargetFileNameProvider();
+        conversionContextFactory = new ConversionContextFactory(new RequestAndEnvironmentAttributeProvider());
     }
 
     AsciidoctorService service = AsciidoctorService.INSTANCE;
@@ -72,67 +67,21 @@ public class ConvertLocalFileServiceImpl implements ConvertLocalFileService {
         String filePath = request.getString(StringRequestParameterKey.SOURCE_FILEPATH);
         Objects.requireNonNull(filePath, "File path must be set!");
 
-        Map<String, Object> optionsAsMap = request.getMap(MapRequestParameterKey.OPTIONS);
-        LOG.debug("Options:{}", optionsAsMap);
-
 
         Asciidoctor asciidoctor = service.getAsciidoctor();
-        OptionsBuilder optionsBuilder = createOptoinsBuilderWithOptionsSet(optionsAsMap);
-        
-        Backend backend = resolveBackend(optionsAsMap);
-        optionsBuilder.backend(backend.convertToString());
-        
-        Map<String, Object> attributesAsMap = request.getMap(MapRequestParameterKey.ATTRIBUTES);
-        LOG.debug("Attributes:{}", attributesAsMap);
-        AttributesBuilder attributesBuilder =createAttributesBuilderWithAttributesSet(attributesAsMap);
-        
-        String graphvizDot = System.getenv("GRAPHVIZ_DOT");
-        if (graphvizDot != null) {
-            attributesBuilder.attribute("graphvizdot@", graphvizDot);
-        }
-        
-        Attributes attributes = attributesBuilder.build();
-        optionsBuilder.attributes(attributes);
-        
-        Options o = optionsBuilder.build();
+          
         Path adocfile = Paths.get(filePath);
-        asciidoctor.convertFile(adocfile.toFile(), o);
+        
+        ConversionContext conversionContext = conversionContextFactory.createConversionContext(request);
+        
+        asciidoctor.convertFile(adocfile.toFile(), conversionContext.options);
 
-        File targetFile = provider.resolveTargetFileFor(adocfile.toFile(), backend);
+        File targetFile = targetFileNameProvider.resolveTargetFileFor(adocfile.toFile(), conversionContext.backend);
+        
         response.set(StringResponseResultKey.RESULT_FILEPATH, targetFile.getAbsolutePath());
         response.setServerLog(service.getLogDataProvider().getLogData());
     }
 
-    private OptionsBuilder createOptoinsBuilderWithOptionsSet(Map<String, Object> optionsAsMap) {
-        OptionsBuilder optionsBuilder = Options.builder();
-        
-        for (String option: optionsAsMap.keySet()) {
-            Object value = optionsAsMap.get(option);
-            
-            optionsBuilder.option(option, value);
-        }
-        return optionsBuilder;
-    }
-    
-    private AttributesBuilder createAttributesBuilderWithAttributesSet(Map<String, Object> attributesAsMap) {
-        AttributesBuilder attributesBuilder = Attributes.builder();
-        
-        for (String attribute: attributesAsMap.keySet()) {
-            Object value = attributesAsMap.get(attribute);
-            
-            attributesBuilder.attribute(attribute, value);
-        }
-        return attributesBuilder;
-    }
 
-    private Backend resolveBackend(Map<String, Object> optionsAsMap) {
-        Object backendOption = optionsAsMap.get(Backend.getOptionId());
-        Backend backend = null;
-        if (backendOption instanceof String) {
-            backend = Backend.convertFromString(backendOption.toString());
-        } else {
-            backend = Backend.getDefault();
-        }
-        return backend;
-    }
+   
 }
