@@ -22,8 +22,6 @@ public enum Commands implements Command{
     
     CONVERT_FILE(StringRequestParameterKey.SOURCE_FILEPATH,MapRequestParameterKey.OPTIONS),
     
-    RESOLVE_ATTRIBUTES_FROM_DIRECTORY(),
-    
     IS_ALIVE,
     
     ;

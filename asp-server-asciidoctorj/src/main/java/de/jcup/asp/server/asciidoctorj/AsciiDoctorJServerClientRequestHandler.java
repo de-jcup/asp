@@ -25,18 +25,15 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringResponseResultKey;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileService;
 import de.jcup.asp.server.asciidoctorj.service.ConvertLocalFileServiceImpl;
-import de.jcup.asp.server.asciidoctorj.service.ResolveAttributesService;
 import de.jcup.asp.server.core.ClientRequestHandler;
 
 public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(AsciiDoctorJServerClientRequestHandler.class);
     private ConvertLocalFileService converterLocalFileService;
-    private ResolveAttributesService resolveAttributesService;
 
     public AsciiDoctorJServerClientRequestHandler() {
         this.converterLocalFileService = createConverterLocalFileService();
-        this.resolveAttributesService = createResolveAttributeService();
     }
     
     @Override
@@ -48,8 +45,6 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
 
         if (Commands.CONVERT_FILE.equals(command)) {
             converterLocalFileService.convertFile(request, response);
-        } else if (Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY.equals(command)) {
-            resolveAttributesService.resolveAttributesFromDirectory(request,response);
         } else {
             response.setErrorMessage("Unsupported command:" + command);
         }
@@ -57,10 +52,6 @@ public class AsciiDoctorJServerClientRequestHandler implements ClientRequestHand
 
     }
     
-    ResolveAttributesService createResolveAttributeService() {
-        return ResolveAttributesService.INSTANCE;
-    }
-
     ConvertLocalFileService createConverterLocalFileService() {
         return ConvertLocalFileServiceImpl.INSTANCE;
     }

@@ -15,7 +15,6 @@
  */
 package de.jcup.asp.client;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -103,17 +102,6 @@ public class AspClient {
         request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
         request.set(MapRequestParameterKey.OPTIONS, options.toMap());
         request.set(MapRequestParameterKey.ATTRIBUTES, attributes.toMap());
-
-        return callServer(request,monitor);
-
-    }
-
-    @Deprecated // will be removed in future
-    public Response resolveAttributes(File baseDir, AspClientProgressMonitor monitor) throws AspClientException {
-        Request request = createRequest();
-
-        request.set(StringRequestParameterKey.COMMAND, Commands.RESOLVE_ATTRIBUTES_FROM_DIRECTORY);
-        request.set(StringRequestParameterKey.BASE_DIR, baseDir.getAbsolutePath());
 
         return callServer(request,monitor);
 
