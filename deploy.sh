@@ -20,6 +20,7 @@ function usage {
     echo -e "${GREEN}Necessary Environment entries:$NC"
     echo -e "${RED}OSSRH_USERNAME$NC:sonatype user name"
     echo -e "${RED}OSSRH_PASSWORD$NC:sonatype password or token"
+    echo -e "${RED}SIGNING_PASSWORD$NC:signing password"
    
 }
 
@@ -36,8 +37,8 @@ if [ -z "$OSSRH_PASSWORD" ]; then
     exit 1;
 fi
 
-if [ -z "$1" ]; then
-    echo -e "Please define the signing password as parameter"
+if [ -z "$SIGNING_PASSWORD" ]; then
+    echo -e "Please export ${RED}SIGNING_PASSWORD${NC}"
     usage
     exit 1;
 fi

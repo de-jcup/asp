@@ -63,9 +63,9 @@ subprojects {
         }
     }
     
-//    if (! projectType.mavenCentralDistUploads.contains(project)){
-//        return;
-//    }
+    if (projectType.notMavenCentralProjects.contains(project)){
+        return;
+    }
 
     apply plugin: 'maven-publish'
     
