@@ -1,6 +1,9 @@
 dependencies {
     api project(':asp-core')
     api project(':asp-client-java') // having already all dependency necessary for client, we juts integrate the small client parts too
+    
+    // we export asciidoctorj api here to have it available inside other tools
+    api library.asciidoctorj_api
 }
 
 task buildDist(type: Jar) {
