@@ -3,3 +3,9 @@ dependencies {
    implementation library.asciidoctorj_api
 
 }
+
+jar {
+    manifest {
+        attributes 'AspApi-Version': "${version}"
+    }
+}
