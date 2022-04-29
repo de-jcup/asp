@@ -98,6 +98,7 @@ public class AspClient {
         }
 
         request.set(StringRequestParameterKey.COMMAND, Commands.CONVERT_FILE);
+        request.set(StringRequestParameterKey.VERSION, Version.getVersion());
 
         request.set(StringRequestParameterKey.SOURCE_FILEPATH, adocfile.toAbsolutePath().toString());
         request.set(MapRequestParameterKey.OPTIONS, asciidocOptions.toMap());

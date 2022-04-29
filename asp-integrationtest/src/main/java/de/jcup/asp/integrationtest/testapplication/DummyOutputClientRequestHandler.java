@@ -25,20 +25,19 @@ import de.jcup.asp.api.Response;
 import de.jcup.asp.api.StringResponseResultKey;
 import de.jcup.asp.server.core.ClientRequestHandler;
 
-public class DummyOutputClientRequestHandler implements ClientRequestHandler{
+public class DummyOutputClientRequestHandler implements ClientRequestHandler {
 
-
-private static final Logger LOG = LoggerFactory.getLogger(DummyOutputClientRequestHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DummyOutputClientRequestHandler.class);
 
     @Override
     public Response handleRequest(Request request) {
-        LOG.info("Request:\n"+request.convertToString());
+        LOG.info("Request:\n" + request.convertToString());
         Command command = request.getCommand();
-        Response response= new Response();
+        Response response = new Response();
         if (Commands.CONVERT_FILE.equals(command)) {
             response.set(StringResponseResultKey.RESULT_FILEPATH, "~/theresult");
-        }else {
-            response.setErrorMessage("Unsupported command:"+command);
+        } else {
+            response.setErrorMessage("Unsupported command:" + command);
         }
         return response;
     }
