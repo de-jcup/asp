@@ -19,6 +19,12 @@ dependencies {
 
 }
 
+jar {
+    manifest {
+        attributes 'AspServer-Version': "${version}"
+    }
+}
+
 task buildDist(type: Jar) {
 
     group = 'ASP'
@@ -27,7 +33,7 @@ task buildDist(type: Jar) {
     
     manifest {
         attributes 'Main-Class': 'de.jcup.asp.server.asciidoctorj.AsciidoctorJServerApplication',
-                   'AspServer-Version': "${version}"
+                    'AspServer-Version': "${version}"
     }
     baseName = "${project.name}"
     from { 

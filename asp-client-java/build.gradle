@@ -2,6 +2,12 @@ dependencies {
     implementation project(':asp-core')
 }
 
+jar {
+    manifest {
+        attributes 'AspClient-Version': "${version}"
+    }
+}
+
 task buildDist(type: Jar) {
     group = 'ASP'
     description = 'build distribution'

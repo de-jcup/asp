@@ -45,7 +45,7 @@ private static final Logger LOG = LoggerFactory.getLogger(ConversionContextFacto
         Map<String, Object> optionsAsMap = request.getMap(MapRequestParameterKey.OPTIONS);
         LOG.debug("AsciidocOptions:{}", optionsAsMap);
         
-        OptionsBuilder optionsBuilder = createOptoinsBuilderWithOptionsSet(optionsAsMap);
+        OptionsBuilder optionsBuilder = createOptionsBuilderWithOptionsSet(optionsAsMap);
         
         Backend backend = resolveBackend(optionsAsMap);
         optionsBuilder.backend(backend.convertToString());
@@ -53,12 +53,13 @@ private static final Logger LOG = LoggerFactory.getLogger(ConversionContextFacto
 
         ConversionContext data = new ConversionContext();
         data.options = optionsBuilder.build();
+        data.options.setAttributes(attributes);
         data.backend=backend;
      
         return data;
     }
     
-    private OptionsBuilder createOptoinsBuilderWithOptionsSet(Map<String, Object> optionsAsMap) {
+    private OptionsBuilder createOptionsBuilderWithOptionsSet(Map<String, Object> optionsAsMap) {
         OptionsBuilder optionsBuilder = Options.builder();
         
         for (String option: optionsAsMap.keySet()) {

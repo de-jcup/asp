@@ -1,0 +1,18 @@
+== I am a headline
+
+[source,java]
+----
+package com.acme.example; // <1>
+
+public class HelloWorld {
+
+    public static void main(String[] args) { <2>
+
+         System.out.println("Hello World!"); // <3>
+
+    }
+}
+----
+<1> Package definition
+<2> Main method with arguments
+<3> Print string to system output
